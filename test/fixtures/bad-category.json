@@ -1,6 +1,7 @@
 {
-  "name": "@someone/thing",
+  "name": "someone/thing",
   "version": "1.0.0",
+  "type": "module",
   "aurabot": {
     "category": "music",
     "capabilities": [],

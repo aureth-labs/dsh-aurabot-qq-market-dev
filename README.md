@@ -1,12 +1,12 @@
 # dsh-aurabot-qq-market-dev
 
-AuraBot 插件市场的**索引与镜像构建**。不托管插件源码——插件住在作者自己的仓库里。
+AuraBot 插件市场的**索引与镜像构建**。
 
 ## 它做什么
 
 1. 维护一份收录表 `registry.json`：每行是作者仓库里 `package.json` 的直链
 2. 构建时逐个拉取、按 schema 校验、合成 `market.json`
-3. 失败的条目写进 `dist/report.md`，同时让 CI 变红
+3. 清单写错的条目跳过并写进 `dist/report.md`（当警告，不阻断流水线）
 
 ## 快速开始
 

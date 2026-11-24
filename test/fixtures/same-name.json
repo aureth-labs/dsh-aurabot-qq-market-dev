@@ -1,0 +1,20 @@
+{
+  "name": "another/playmusic",
+  "version": "2.0.0",
+  "type": "module",
+  "main": "lib/index.js",
+  "description": "同名不同作者",
+  "license": "MIT",
+  "author": "another",
+  "aurabot": {
+    "category": "social",
+    "capabilities": [],
+    "minPluginVersion": "1.2.0",
+    "api": 1,
+    "artifact": {
+      "url": "https://github.com/another/x/releases/download/playmusic-v2.0.0/playmusic-2.0.0.zip",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "size": 100
+    }
+  }
+}

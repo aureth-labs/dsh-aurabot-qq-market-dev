@@ -1,11 +1,13 @@
 import { CAPABILITIES, CATEGORIES, type PackageManifest } from './types.js'
 
-/** 包名必须是 @owner/name，owner 和 name 都只允许小写字母、数字、- */
-const NAME_RE = /^@([a-z0-9][a-z0-9-]{0,38})\/([a-z0-9][a-z0-9-]{0,38})$/
+/** 包名必须是 scope/name（不带 @），只允许小写字母、数字、- */
+const NAME_RE = /^([a-z0-9][a-z0-9-]{0,38})\/([a-z0-9][a-z0-9-]{0,38})$/
 const SEMVER_RE = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?$/
 const SHA256_RE = /^[0-9a-f]{64}$/
 /** 内置模块 id 没有 owner 前缀，允许平铺 */
 const BUILTIN_ID_RE = /^[a-z][a-z0-9-]{1,39}$/
+const PANEL_RE = /^\.\/[A-Za-z0-9._/-]+\.js$/
+export const DEFAULT_PANEL = './client/panel.js'
 
 export interface ValidationResult {
   errors: string[]
@@ -28,11 +30,13 @@ export function validateManifest(raw: unknown): ValidationResult {
 
   const name = raw.name
   if (typeof name !== 'string') errors.push('缺 name')
-  else if (!NAME_RE.test(name)) errors.push(`name「${name}」要写成 @owner/name，且只用小写字母、数字、-`)
+  else if (!NAME_RE.test(name)) errors.push(`name「${name}」要写成 scope/name（不带 @），scope 是你的 GitHub 用户名或组织名`)
 
   const version = raw.version
   if (typeof version !== 'string') errors.push('缺 version')
   else if (!SEMVER_RE.test(version)) errors.push(`version「${version}」不是 主.次.修`)
+
+  if (raw.type !== 'module') errors.push('type 必须是 "module"：插件只支持 ESM')
 
   const aurabot = raw.aurabot
   if (!isRecord(aurabot)) {
@@ -44,10 +48,9 @@ export function validateManifest(raw: unknown): ValidationResult {
     errors.push(`aurabot.category 要从这些里选一个：${CATEGORIES.join('、')}`)
   }
 
-  const tags = aurabot.tags
-  if (tags !== undefined) {
-    if (!Array.isArray(tags) || tags.length > 5) errors.push('aurabot.tags 要是数组，最多 5 个')
-    else if (tags.some((tag) => typeof tag !== 'string' || !tag.trim())) errors.push('aurabot.tags 里只能放非空字符串')
+  const panel = aurabot.panel
+  if (panel !== undefined && (typeof panel !== 'string' || !PANEL_RE.test(panel))) {
+    errors.push('aurabot.panel 要写成 ./xxx/panel.js（相对模块根目录，不能跳出模块）')
   }
 
   const caps = aurabot.capabilities

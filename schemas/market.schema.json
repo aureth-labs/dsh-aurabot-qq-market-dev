@@ -13,7 +13,7 @@
       "items": {
         "type": "object",
         "required": [
-          "id", "owner", "name", "version", "displayName", "description", "tags",
+          "id", "owner", "name", "version", "displayName", "description", "panel",
           "category", "capabilities", "platforms", "requires",
           "minPluginVersion", "api", "license", "author", "artifact", "source", "verified"
         ],
@@ -25,7 +25,7 @@
           "version": { "type": "string" },
           "displayName": { "type": "string" },
           "description": { "type": "string" },
-          "tags": { "type": "array", "items": { "type": "string" } },
+          "panel": { "type": "string" },
           "category": { "enum": ["platform", "social", "creative", "desktop", "manage", "tool"] },
           "capabilities": { "type": "array", "items": { "type": "string" } },
           "platforms": { "type": "array", "items": { "type": "string" } },
@@ -44,7 +44,15 @@
             }
           },
           "source": { "type": "string" },
-          "verified": { "type": "boolean" }
+          "verified": { "type": "boolean" },
+          "revoked": {
+            "type": "object",
+            "required": ["versions", "reason"],
+            "properties": {
+              "versions": { "type": "array", "items": { "type": "string" } },
+              "reason": { "type": "string" }
+            }
+          }
         }
       }
     }

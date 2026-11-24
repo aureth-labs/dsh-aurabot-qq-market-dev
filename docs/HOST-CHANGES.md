@@ -28,8 +28,8 @@
 
 | module.json | package.json | 说明 |
 | --- | --- | --- |
-| `id` | `name` 的 `name` 部分 | `@owner/name` → `name` |
-| — | `name` 的 `owner` 部分 | 新字段，展示来源 |
+| `id` | `name` 的 `name` 部分 | `scope/name` → `name` |
+| — | `name` 的 `scope` 部分 | 新字段，展示来源 |
 | `name` | `aurabot.displayName`（回落包名） | |
 | `version` | `version` | |
 | `description` | `description` | |
@@ -40,7 +40,7 @@
 | `minPluginVersion` | `aurabot.minPluginVersion` | |
 | `api` | `aurabot.api` | |
 | `requires` | `aurabot.requires` | |
-| `panel` | **待定** | 见 §8 |
+| `panel` | `aurabot.panel`（缺省 `./client/panel.js`） | 相对模块根目录 |
 | `build.out` | 不再需要 | 构建在作者仓库完成 |
 
 ## 2. 入口解析
@@ -56,20 +56,21 @@
 
 **验收**：入口叫 `main.js`、`dist/entry.js` 都能加载；没有 `index.mjs` 也能跑。
 
-## 3. id：平铺 → `owner/name`
+## 3. id：平铺 → `scope/name`（不带 @）
 
 | | 现在 | 目标 |
 | --- | --- | --- |
-| 对外 id | `playmusic`（= 文件夹名） | `shangxueink/playmusic` |
+| 对外 id | `playmusic`（= 文件夹名） | `shangxueink/playmusic`（不带 `@`） |
 | 同名不同作者 | 冲突 | 共存 |
-| 安装目录 | `modules/<id>/` | `modules/<owner>__<name>/`（路径里不能出现 `/`） |
+| 安装目录 | `modules/<id>/` | `modules/<scope>/<name>/` |
 
-- [ ] id 一律按 `owner/name` 解析，来源是 `package.json.name`
+- [ ] id 一律按 `scope/name` 解析，来源是 `package.json.name`
 - [ ] 配置文件里的键、面板路由、日志里的模块名都要跟着用 qualified id，否则重名会串
-- [ ] `requires` 解析：先查内置（无前缀），再查 `owner/name`
+- [ ] `requires` 解析：先查内置（无前缀），再查 `scope/name`
 - [ ] 老模块保持平铺 id 不变（它们没有 `/`，天然不冲突）
+- [ ] 同一 scope 下重名：市场侧按 `-2`、`-3` 后缀自动改名，宿主按改名后的 id 安装即可
 
-**验收**：`@a/music` 和 `@b/music` 能同时安装、同时启用、互不覆盖配置。
+**验收**：`a/music` 和 `b/music` 能同时安装、同时启用、互不覆盖配置。
 
 ## 4. 安装协议
 
@@ -109,11 +110,11 @@
 
 ## 8. 待主框架拍板
 
-1. **`panel` 字段放哪**：现在 `module.json.panel` 指向 `panel.js`，新格式里还没定（`aurabot.panel`？还是约定 `lib/panel.js`？）
-2. **是否允许 CJS**：建议只允许 ESM，减少加载分支
-3. **安装目录命名**：`owner__name` 还是别的转义方式
-4. **是否校验 GitHub provenance / attestation**：第一版可以先只校验 sha256
-5. **升级时数据目录**：`data/<id>/` 是否随 id 变更迁移
+1. **是否校验 GitHub provenance / attestation**：第一版可以先只校验 sha256
+2. **升级时数据目录**：`data/<id>/` 是否随 id 变更迁移
+3. **老模块的 panel 回落**：`module.json.panel` 继续沿用，新格式统一读 `aurabot.panel`
+
+已定：只允许 ESM（`"type": "module"`，CJS 直接拒绝）；面板缺省 `./client/panel.js`；安装目录 `modules/<scope>/<name>/`。
 
 ## 9. 明确不属于主框架的部分
 

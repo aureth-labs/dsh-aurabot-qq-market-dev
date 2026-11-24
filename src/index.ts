@@ -3,7 +3,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { buildMarket } from './build.js'
 import { renderReport } from './report.js'
-import type { Registry } from './types.js'
+import type { Registry, RevokedEntry } from './types.js'
 
 const arg = (name: string, fallback: string): string => {
   const i = process.argv.indexOf(name)
@@ -25,7 +25,7 @@ async function readJsonIfExists(path: string): Promise<unknown | null> {
 async function main(): Promise<number> {
   const command = process.argv[2]
   if (command !== 'build') {
-    console.error('用法：node lib/index.js build [--registry registry.json] [--out dist/market.json] [--report dist/report.md] [--verified verified.json] [--allow-failures]')
+    console.error('用法：node lib/index.js build [--registry registry.json] [--out dist/market.json] [--report dist/report.md] [--verified verified.json] [--revoked revoked.json] [--strict]')
     return 2
   }
 
@@ -33,6 +33,7 @@ async function main(): Promise<number> {
   const outPath = resolve(arg('--out', 'dist/market.json'))
   const reportPath = resolve(arg('--report', 'dist/report.md'))
   const verifiedPath = resolve(arg('--verified', 'verified.json'))
+  const revokedPath = resolve(arg('--revoked', 'revoked.json'))
 
   const registry = (await readJsonIfExists(registryPath)) as Registry | null
   if (!registry || !Array.isArray(registry.sources)) {
@@ -45,19 +46,24 @@ async function main(): Promise<number> {
     Array.isArray(verifiedRaw) ? verifiedRaw.filter((id): id is string => typeof id === 'string') : [],
   )
 
-  const result = await buildMarket(registry, { verified })
+  const revokedRaw = (await readJsonIfExists(revokedPath)) as unknown
+  const revoked = (Array.isArray(revokedRaw) ? revokedRaw : []) as RevokedEntry[]
+
+  const result = await buildMarket(registry, { verified, revoked })
 
   await mkdir(dirname(outPath), { recursive: true })
   await writeFile(outPath, JSON.stringify(result.index, null, 2) + '\n')
   await mkdir(dirname(reportPath), { recursive: true })
   await writeFile(reportPath, renderReport(result))
 
-  console.log(`收录 ${result.index.entries.length} 个，失败 ${result.failures.length} 个`)
-  for (const failure of result.failures) console.error(`✗ ${failure.id ?? failure.source}：${failure.reason}`)
+  console.log(`收录 ${result.index.entries.length} 个，跳过 ${result.failures.length} 个，重命名 ${result.renamed.length} 个`)
+  for (const failure of result.failures) console.warn(`! ${failure.id ?? failure.source}：${failure.reason}`)
+  for (const item of result.renamed) console.warn(`! id 冲突：${item.from} → ${item.to}`)
   console.log(`索引：${outPath}`)
   console.log(`报告：${reportPath}`)
 
-  if (result.failures.length && !flag('--allow-failures')) return 1
+  // 默认只当警告：单个作者写错清单不该卡住整条流水线。需要严格模式时加 --strict。
+  if (result.failures.length && flag('--strict')) return 1
   return 0
 }
 

@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises'
-import { parseId, validateManifest } from './validate.js'
-import type { MarketEntry, MarketIndex, PackageManifest, Registry } from './types.js'
+import { DEFAULT_PANEL, parseId, validateManifest } from './validate.js'
+import type { MarketEntry, MarketIndex, PackageManifest, Registry, RevokedEntry } from './types.js'
 
 export interface Failure {
   source: string
@@ -11,13 +11,18 @@ export interface Failure {
 export interface BuildOptions {
   /** 已审核的 id，命中的条目标 verified: true */
   verified?: Set<string>
+  /** 撤回表：命中的条目带上 revoked 说明 */
+  revoked?: RevokedEntry[]
   /** 单条请求超时，默认 15 秒 */
   timeoutMs?: number
 }
 
 export interface BuildResult {
   index: MarketIndex
+  /** 清单本身不合法，整条跳过 */
   failures: Failure[]
+  /** id 冲突后被改名的条目 */
+  renamed: { from: string; to: string }[]
 }
 
 async function readJson(source: string, timeoutMs: number): Promise<unknown> {
@@ -40,15 +45,50 @@ function authorOf(manifest: PackageManifest): string {
   return manifest.author?.name ?? ''
 }
 
+interface Candidate {
+  id: string
+  owner: string
+  name: string
+  manifest: PackageManifest
+  source: string
+}
+
+function toEntry(candidate: Candidate, id: string, verified: boolean, revoked: RevokedEntry[]): MarketEntry {
+  const { manifest, owner, name, source } = candidate
+  const hit = revoked.find((item) => item.id === id && item.versions.includes(manifest.version))
+  return {
+    id,
+    owner,
+    name,
+    version: manifest.version,
+    displayName: manifest.aurabot.displayName || name,
+    description: manifest.description ?? '',
+    panel: manifest.aurabot.panel ?? DEFAULT_PANEL,
+    category: manifest.aurabot.category,
+    capabilities: manifest.aurabot.capabilities,
+    platforms: manifest.aurabot.platforms ?? ['qq'],
+    requires: manifest.aurabot.requires ?? [],
+    minPluginVersion: manifest.aurabot.minPluginVersion,
+    api: manifest.aurabot.api,
+    license: manifest.license ?? '',
+    author: authorOf(manifest),
+    artifact: manifest.aurabot.artifact,
+    source,
+    verified,
+    ...(hit ? { revoked: { versions: hit.versions, reason: hit.reason } } : {}),
+  }
+}
+
 /**
  * 拉取 registry 里的每个 package.json，校验后合成市场索引。
- * 单条失败只记进 failures，不影响其它条目——一个作者的 404 不该拖垮整次构建。
+ * 清单不合法只记进 failures 并跳过这一条，不影响其它条目，也不让整次构建失败。
  */
 export async function buildMarket(registry: Registry, options: BuildOptions = {}): Promise<BuildResult> {
   const verified = options.verified ?? new Set<string>()
+  const revoked = options.revoked ?? []
   const timeoutMs = options.timeoutMs ?? 15_000
-  const entries = new Map<string, MarketEntry>()
   const failures: Failure[] = []
+  const candidates: Candidate[] = []
 
   for (const item of registry.sources) {
     const source = item.package
@@ -59,49 +99,41 @@ export async function buildMarket(registry: Registry, options: BuildOptions = {}
         failures.push({ source, reason: errors.join('；') })
         continue
       }
-
       const parsed = parseId(manifest.name)
       if (!parsed) {
-        failures.push({ source, id: manifest.name, reason: '包名不是 @owner/name' })
+        failures.push({ source, id: manifest.name, reason: '包名不是 scope/name' })
         continue
       }
-      const id = `${parsed.owner}/${parsed.name}`
-
-      const previous = entries.get(id)
-      if (previous) {
-        failures.push({ source, id, reason: `id 重复：已收录自 ${previous.source}` })
-        continue
-      }
-
-      entries.set(id, {
-        id,
-        owner: parsed.owner,
-        name: parsed.name,
-        version: manifest.version,
-        displayName: manifest.aurabot.displayName || parsed.name,
-        description: manifest.description ?? '',
-        tags: manifest.aurabot.tags ?? [],
-        category: manifest.aurabot.category,
-        capabilities: manifest.aurabot.capabilities,
-        platforms: manifest.aurabot.platforms ?? ['qq'],
-        requires: manifest.aurabot.requires ?? [],
-        minPluginVersion: manifest.aurabot.minPluginVersion,
-        api: manifest.aurabot.api,
-        license: manifest.license ?? '',
-        author: authorOf(manifest),
-        artifact: manifest.aurabot.artifact,
-        source,
-        verified: verified.has(id),
-      })
+      candidates.push({ id: `${parsed.owner}/${parsed.name}`, owner: parsed.owner, name: parsed.name, manifest, source })
     } catch (error) {
       failures.push({ source, reason: (error as Error).message })
     }
   }
 
-  const sorted = [...entries.values()].sort((a, b) => a.id.localeCompare(b.id))
+  // 同 id 冲突：按 owner 首字母排，先到的保住 id，后来的加 -2 / -3 后缀
+  const grouped = new Map<string, Candidate[]>()
+  for (const candidate of candidates) {
+    const list = grouped.get(candidate.id)
+    if (list) list.push(candidate)
+    else grouped.set(candidate.id, [candidate])
+  }
+
+  const entries: MarketEntry[] = []
+  const renamed: { from: string; to: string }[] = []
+  for (const [id, group] of grouped) {
+    group.sort((a, b) => a.owner.localeCompare(b.owner) || a.source.localeCompare(b.source))
+    group.forEach((candidate, index) => {
+      const finalId = index === 0 ? id : `${candidate.owner}/${candidate.name}-${index + 1}`
+      if (finalId !== id) renamed.push({ from: id, to: finalId })
+      entries.push(toEntry(candidate, finalId, verified.has(finalId) || verified.has(id), revoked))
+    })
+  }
+
+  entries.sort((a, b) => a.id.localeCompare(b.id))
   return {
-    index: { schema: 2, generatedAt: new Date().toISOString(), entries: sorted },
+    index: { schema: 2, generatedAt: new Date().toISOString(), entries },
     failures,
+    renamed,
   }
 }
 

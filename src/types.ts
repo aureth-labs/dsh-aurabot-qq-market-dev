@@ -22,8 +22,8 @@ export interface Artifact {
 export interface AurabotManifest {
   /** 市场里显示的名字；和包名解耦，允许重名 */
   displayName?: string
-  /** 搜索关键词，最多 5 个 */
-  tags?: string[]
+  /** 面板文件，相对模块根目录；缺省 ./client/panel.js */
+  panel?: string
   category: Category
   capabilities: Capability[]
   /** 最低插件版本，例如 1.2.0 */
@@ -40,6 +40,7 @@ export interface AurabotManifest {
 
 /** 作者仓库里的 package.json，只列我们关心的字段。 */
 export interface PackageManifest {
+  /** `scope/name`：scope 是 GitHub 用户名或组织名（小写），不带 @ */
   name: string
   version: string
   main?: string
@@ -64,14 +65,15 @@ export interface Registry {
 
 /** 生成的 market.json 里的一条。 */
 export interface MarketEntry {
-  /** `owner/name`，全局唯一 */
+  /** `scope/name`，全局唯一 */
   id: string
   owner: string
   name: string
   version: string
   displayName: string
   description: string
-  tags: string[]
+  /** 面板文件路径，已套用默认值 */
+  panel: string
   category: Category
   capabilities: Capability[]
   platforms: string[]
@@ -85,6 +87,15 @@ export interface MarketEntry {
   source: string
   /** 是否经过审核。自动收录一律 false */
   verified: boolean
+  /** 被撤回的版本（供应链事故时用），没撤回就不写 */
+  revoked?: { versions: string[]; reason: string }
+}
+
+/** revoked.json 的一条：哪些版本、为什么撤回 */
+export interface RevokedEntry {
+  id: string
+  versions: string[]
+  reason: string
 }
 
 export interface MarketIndex {

@@ -12,6 +12,9 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: market
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,7 +30,7 @@ jobs:
       - run: npm test
       - name: 构建市场索引
         run: node lib/index.js build --registry registry.json --out dist/market.json --report dist/report.md
-      - name: 失败清单打到日志和 job summary
+      - name: 跳过清单打到日志和 job summary
         if: always()
         run: |
           if [ -f dist/report.md ]; then
@@ -39,3 +42,40 @@ jobs:
         with:
           name: market
           path: dist/
+
+  publish:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: market
+          path: dist
+      - name: 发布 market.json 到 market 分支
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if git fetch -q origin market 2>/dev/null; then
+            git worktree add -q -B market .market origin/market
+          else
+            git worktree add -q --orphan -B market .market
+          fi
+          mkdir -p .market
+          cp dist/market.json dist/report.md .market/
+          cd .market
+          git add market.json report.md
+          if git diff --cached --quiet; then
+            echo "索引没有变化"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -q -m "market: 更新索引"
+          git push -q "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" market

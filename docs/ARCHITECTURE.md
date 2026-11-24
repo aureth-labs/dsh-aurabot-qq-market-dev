@@ -31,14 +31,14 @@
 | # | 决策 | 理由 |
 | --- | --- | --- |
 | D1 | 代码与索引分离，市场不托管源码 | 避免「改一行也要 PR 到官方仓库」 |
-| D2 | id 用 `owner/name` | 天然唯一、和 GitHub 身份对齐、允许 displayName 重名 |
+| D2 | id 用 `scope/name`（不带 @） | 天然唯一、和 GitHub 身份对齐、允许 displayName 重名；`@` 是 npm 的约定，我们不发布到 npm |
 | D3 | 构建在作者仓库做，产物发 Release | 市场不执行作者代码，供应链风险留在作者侧 |
 | D4 | `package.json` 单一真相，自定义字段放 `aurabot` 段 | npm 工具链兼容；避免和编辑器内置 schema 打架 |
 | D5 | 入口用 `main`，产物在 `lib/` | 不再依赖 `index.mjs` 约定 |
-| D6 | 索引由市场全量重建 | 没有「增量状态」要维护，天然自愈 |
+| D6 | 索引由市场全量重建；清单写错的条目跳过 | 没有「增量状态」要维护，天然自愈；一个作者写错不该卡住整条流水线 |
 | D7 | 收录靠 `registry.json` 里的 package.json 直链 | 一个请求拿全一个仓库的所有模块信息 |
 | D8 | 评分：star + 最近提交，口径见下 | 纯 star 对多模块仓库不公平 |
-| D9 | 安全：自动收录一律 `verified: false` | 开放优先，但不做背书 |
+| D9 | 安全：自动收录一律 `verified: false`；撤回走 `revoked.json` | 开放优先，但不做背书；出事故时能强制提示已装用户 |
 
 ## package.json 约定
 
@@ -50,8 +50,8 @@
   "main": "lib/index.js",
   "aurabot": {
     "displayName": "显示名",
+    "panel": "./client/panel.js",
     "category": "social",
-    "tags": ["关键词"],
     "capabilities": ["network"],
     "minPluginVersion": "1.2.0",
     "api": 1,
@@ -63,7 +63,7 @@
 
 完整约束见 `schemas/package.schema.json`。
 
-`artifact` 由作者仓库的 Actions 回写；市场只读不写。
+`artifact` 由作者仓库的 Actions 回写；市场只读不写。`panel` 缺省为 `./client/panel.js`。
 
 ## 依赖策略
 
@@ -77,17 +77,17 @@
 npm run market          # registry.json → dist/market.json + dist/report.md
 ```
 
-- 单条失败只记进报告，不影响其它条目
-- 有失败时退出码 1（CI 会红），`--allow-failures` 可放行
+- 单条失败只记进报告并跳过，不影响其它条目、也不让流水线变红（`--strict` 才按失败处理）
 - `verified.json` 里列出的 id 标 `verified: true`
 - 下架：把 `registry.json` 里的条目删掉，下次构建自然消失
+- 撤回：`revoked.json` 里写 `{ id, versions, reason }`，命中的条目在 `market.json` 里带上 `revoked`
 
 ## 评分口径（草案）
 
 - 主展示：仓库 star
 - 排序参考：`log10(stars) / sqrt(该仓库插件数)`，对多模块仓库温和惩罚
 - 辅助：最近一次提交距今时间
-- 以后有遥测再加下载量；现在不臆造数据
+- 以后有遥测再加下载量
 
 ## 安全边界
 

@@ -4,12 +4,12 @@
   "title": "AuraBot 插件 package.json",
   "description": "插件市场只认这份 schema 里的字段；npm 自己的字段不在这里约束（additionalProperties 允许）。",
   "type": "object",
-  "required": ["name", "version", "aurabot"],
+  "required": ["name", "version", "type", "aurabot"],
   "properties": {
     "name": {
       "type": "string",
-      "pattern": "^@[a-z0-9][a-z0-9-]{0,38}/[a-z0-9][a-z0-9-]{0,38}$",
-      "description": "必须带 @owner/ 前缀：owner 是你的 GitHub 用户名或组织名（小写）"
+      "pattern": "^[a-z0-9][a-z0-9-]{0,38}/[a-z0-9][a-z0-9-]{0,38}$",
+      "description": "scope/name，不带 @：scope 是你的 GitHub 用户名或组织名（小写）"
     },
     "version": {
       "type": "string",
@@ -27,11 +27,11 @@
       "additionalProperties": false,
       "properties": {
         "displayName": { "type": "string", "maxLength": 40, "description": "市场里显示的名字，可以和包名重名" },
-        "tags": {
-          "type": "array",
-          "maxItems": 5,
-          "uniqueItems": true,
-          "items": { "type": "string", "minLength": 1, "maxLength": 20 }
+        "panel": {
+          "type": "string",
+          "pattern": "^\\./[A-Za-z0-9._/-]+\\.js$",
+          "default": "./client/panel.js",
+          "description": "面板文件，相对模块根目录"
         },
         "category": {
           "enum": ["platform", "social", "creative", "desktop", "manage", "tool"],
@@ -50,8 +50,8 @@
         "requires": {
           "type": "array",
           "uniqueItems": true,
-          "items": { "type": "string", "pattern": "^(@[a-z0-9][a-z0-9-]{0,38}/[a-z0-9][a-z0-9-]{0,38}|[a-z][a-z0-9-]{1,39})$" },
-          "description": "依赖的模块 id：owner/name，或内置模块 id"
+          "items": { "type": "string", "pattern": "^([a-z0-9][a-z0-9-]{0,38}/[a-z0-9][a-z0-9-]{0,38}|[a-z][a-z0-9-]{1,39})$" },
+          "description": "依赖的模块 id：scope/name，或内置模块 id"
         },
         "platforms": {
           "type": "array",

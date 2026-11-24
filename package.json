@@ -1,0 +1,20 @@
+{
+  "name": "@aurabot/market",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AuraBot 插件市场的索引与镜像构建：收录 package.json 地址，拉取、校验，生成 market.json",
+  "license": "MIT",
+  "engines": { "node": ">=22.2" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "market": "node lib/index.js build",
+    "test": "npm run build && node --test \"test/*.test.mjs\""
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^5.6.3"
+  }
+}
+

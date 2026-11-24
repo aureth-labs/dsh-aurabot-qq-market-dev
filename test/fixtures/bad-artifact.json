@@ -1,0 +1,16 @@
+{
+  "name": "@someone/thing",
+  "version": "1.0.0",
+  "aurabot": {
+    "category": "tool",
+    "capabilities": ["network"],
+    "minPluginVersion": "1.2.0",
+    "api": 1,
+    "artifact": {
+      "url": "http://example.com/a.zip",
+      "sha256": "abc",
+      "size": 0
+    }
+  }
+}
+

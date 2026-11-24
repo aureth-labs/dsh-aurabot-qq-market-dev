@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aurabot.dev/schemas/market.schema.json",
+  "title": "市场镜像 market.json",
+  "type": "object",
+  "required": ["schema", "generatedAt", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 2 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id", "owner", "name", "version", "displayName", "description", "tags",
+          "category", "capabilities", "platforms", "requires",
+          "minPluginVersion", "api", "license", "author", "artifact", "source", "verified"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,38}/[a-z0-9][a-z0-9-]{0,38}$" },
+          "owner": { "type": "string" },
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "displayName": { "type": "string" },
+          "description": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "category": { "enum": ["platform", "social", "creative", "desktop", "manage", "tool"] },
+          "capabilities": { "type": "array", "items": { "type": "string" } },
+          "platforms": { "type": "array", "items": { "type": "string" } },
+          "requires": { "type": "array", "items": { "type": "string" } },
+          "minPluginVersion": { "type": "string" },
+          "api": { "type": "integer", "minimum": 1 },
+          "license": { "type": "string" },
+          "author": { "type": "string" },
+          "artifact": {
+            "type": "object",
+            "required": ["url", "sha256", "size"],
+            "properties": {
+              "url": { "type": "string" },
+              "sha256": { "type": "string" },
+              "size": { "type": "integer" }
+            }
+          },
+          "source": { "type": "string" },
+          "verified": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}
+

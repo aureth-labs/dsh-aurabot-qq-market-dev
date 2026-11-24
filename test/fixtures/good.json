@@ -1,0 +1,23 @@
+{
+  "name": "@shangxueink/playmusic",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "lib/index.js",
+  "description": "语音点歌",
+  "license": "MIT",
+  "author": "shangxue",
+  "aurabot": {
+    "displayName": "语音点歌",
+    "category": "social",
+    "capabilities": ["network", "filesystem", "process"],
+    "minPluginVersion": "1.2.0",
+    "api": 1,
+    "requires": ["media"],
+    "artifact": {
+      "url": "https://github.com/shangxueink/x/releases/download/playmusic-v1.0.0/playmusic-1.0.0.zip",
+      "sha256": "58accc19cce65617be291c82a63bf6016cca9d3dde928fa3f7fd04f88cb8878c",
+      "size": 19167
+    }
+  }
+}
+

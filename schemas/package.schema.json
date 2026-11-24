@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aurabot.dev/schemas/package.schema.json",
+  "title": "AuraBot 插件 package.json",
+  "description": "插件市场只认这份 schema 里的字段；npm 自己的字段不在这里约束（additionalProperties 允许）。",
+  "type": "object",
+  "required": ["name", "version", "aurabot"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^@[a-z0-9][a-z0-9-]{0,38}/[a-z0-9][a-z0-9-]{0,38}$",
+      "description": "必须带 @owner/ 前缀：owner 是你的 GitHub 用户名或组织名（小写）"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$"
+    },
+    "type": { "const": "module" },
+    "main": { "type": "string", "description": "入口文件，通常是 lib/index.js" },
+    "aurabot": { "$ref": "#/$defs/aurabot" }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "aurabot": {
+      "type": "object",
+      "required": ["category", "capabilities", "minPluginVersion", "api", "artifact"],
+      "additionalProperties": false,
+      "properties": {
+        "displayName": { "type": "string", "maxLength": 40, "description": "市场里显示的名字，可以和包名重名" },
+        "tags": {
+          "type": "array",
+          "maxItems": 5,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 20 }
+        },
+        "category": {
+          "enum": ["platform", "social", "creative", "desktop", "manage", "tool"],
+          "description": "单选。platform=逛平台 / social=聊天互动 / creative=创作 / desktop=桌面 / manage=管理 / tool=工具"
+        },
+        "capabilities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["network", "filesystem", "process", "dynamic-code", "plugin-config", "plugin-internals"] }
+        },
+        "minPluginVersion": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+        },
+        "api": { "type": "integer", "minimum": 1 },
+        "requires": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^(@[a-z0-9][a-z0-9-]{0,38}/[a-z0-9][a-z0-9-]{0,38}|[a-z][a-z0-9-]{1,39})$" },
+          "description": "依赖的模块 id：owner/name，或内置模块 id"
+        },
+        "platforms": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^(\\*|[a-z][a-z0-9-]{0,39})$" }
+        },
+        "artifact": {
+          "type": "object",
+          "required": ["url", "sha256", "size"],
+          "additionalProperties": false,
+          "properties": {
+            "url": { "type": "string", "pattern": "^https://.+\\.zip$" },
+            "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+            "size": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    }
+  }
+}
+

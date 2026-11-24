@@ -34,7 +34,6 @@
 | `version` | `version` | |
 | `description` | `description` | |
 | `category` | `aurabot.category` | 单选 |
-| `tags` | `aurabot.tags` | ≤ 5 个 |
 | `platforms` | `aurabot.platforms` | 缺省 `["qq"]` |
 | `capabilities` | `aurabot.capabilities` | |
 | `minPluginVersion` | `aurabot.minPluginVersion` | |

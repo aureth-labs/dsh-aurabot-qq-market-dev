@@ -33,7 +33,8 @@ verified.json          已审核的 id 列表
 - [x] 索引构建器（拉取、校验、生成 market.json + 报告）
 - [x] package.json / registry / market 的 schema
 - [x] 主框架改造清单
-- [ ] 作者侧模板仓库（Actions + 两个示例插件）
-- [ ] 市场仓库自己的 GitHub Actions（定时重建 + 发布）
-- [ ] `llms.txt` 与文档站
+- [x] 作者侧模板仓库（Actions + 两个示例插件）
+- [x] 市场仓库自己的 GitHub Actions（定时重建 + 发布到 `market` 分支）
+- [x] `docs/llms.txt`
+- [ ] 文档站（VitePress）
 

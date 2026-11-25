@@ -33,6 +33,8 @@ https://github.com/aureth-labs/dsh-aurabot-qq-market-dev/blob/market/market.json
 
 - 站点：https://aureth-labs.github.io/dsh-aurabot-qq-market-dev/
 - 给 AI 看的规范：https://aureth-labs.github.io/dsh-aurabot-qq-market-dev/llms.txt
+- 架构与决策：https://aureth-labs.github.io/dsh-aurabot-qq-market-dev/ARCHITECTURE
+- 主框架改造清单：https://aureth-labs.github.io/dsh-aurabot-qq-market-dev/HOST-CHANGES
 - 源码：`docs` 分支下的 `docs/` 目录
 
 ## 目录

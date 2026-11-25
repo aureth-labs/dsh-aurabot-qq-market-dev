@@ -52,10 +52,8 @@ export interface PackageManifest {
 
 /** 一条收录：registry.jsonl 里的一行。 */
 export interface Source {
-  /** 人看的原始地址，会原样写进 market.json 的 `source` */
+  /** 原样保留的链接：写进 market.json 的 `source` 也是它，不做任何改写 */
   url: string
-  /** 实际拉取用的地址：GitHub blob 链接会换成 raw；本地路径只用于测试 */
-  fetchUrl: string
   /** 可选：地址里看不出 owner 时（本地文件、自建域名）显式指定 */
   owner?: string
 }

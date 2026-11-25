@@ -1,15 +1,5 @@
 import type { Source } from './types.js'
 
-/**
- * 收录表里写的是人点的链接：`https://github.com/<owner>/<repo>/blob/<ref>/<path>`。
- * 拉取时换成 raw，省得作者去翻 raw 域名。
- */
-export function toFetchUrl(url: string): string {
-  const plain = url.split('#')[0] ?? url
-  const found = /^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/(?:blob|raw)\/([^?#]+)/i.exec(plain)
-  return found ? `https://raw.githubusercontent.com/${found[1]}/${found[2]}/${found[3]}` : plain
-}
-
 export interface RegistryParse {
   sources: Source[]
   /** 写错的行，构建时打到日志里，不影响其它行 */
@@ -45,7 +35,7 @@ export function parseRegistry(text: string): RegistryParse {
     const value = url.trim()
     if (seen.has(value)) return
     seen.add(value)
-    sources.push({ url: value, fetchUrl: toFetchUrl(value) })
+    sources.push({ url: value })
   })
 
   return { sources, errors }

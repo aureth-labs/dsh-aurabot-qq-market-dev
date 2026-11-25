@@ -2,13 +2,13 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import test from 'node:test'
-import { buildMarket } from '../lib/build.js'
-import { parseRegistry, toFetchUrl } from '../lib/registry.js'
+import { asRawView, buildMarket } from '../lib/build.js'
+import { parseRegistry } from '../lib/registry.js'
 import { ownerFromSource, qualify, validateManifest } from '../lib/validate.js'
 
 const fixture = (name) => fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url))
 const read = (name) => JSON.parse(readFileSync(fixture(name), 'utf8'))
-const source = (name, owner) => ({ url: fixture(name), fetchUrl: fixture(name), ...(owner ? { owner } : {}) })
+const source = (name, owner) => ({ url: fixture(name), ...(owner ? { owner } : {}) })
 
 test('合法清单通过：name 只写包名本身', () => {
   const result = validateManifest(read('good.json'))
@@ -110,11 +110,11 @@ test('registry.jsonl 也认带引号的 JSON 字符串行', () => {
   assert.equal(sources.length, 1)
 })
 
-test('GitHub blob 链接拉取时换成 raw', () => {
+test('blob 链接请求时加 ?raw=1，链接本身不改', () => {
   assert.equal(
-    toFetchUrl('https://github.com/shangxueink/dsh-aurabot-qq-plugins-template/blob/main/modules/ping/package.json'),
-    'https://raw.githubusercontent.com/shangxueink/dsh-aurabot-qq-plugins-template/main/modules/ping/package.json',
+    asRawView('https://github.com/shangxueink/dsh-aurabot-qq-plugins-template/blob/main/modules/ping/package.json'),
+    'https://github.com/shangxueink/dsh-aurabot-qq-plugins-template/blob/main/modules/ping/package.json?raw=1',
   )
-  assert.equal(toFetchUrl('https://raw.githubusercontent.com/a/r/main/x.json'), 'https://raw.githubusercontent.com/a/r/main/x.json')
-  assert.equal(toFetchUrl('test/fixtures/good.json'), 'test/fixtures/good.json')
+  assert.equal(asRawView('https://raw.githubusercontent.com/a/r/main/x.json'), 'https://raw.githubusercontent.com/a/r/main/x.json')
+  assert.equal(asRawView('test/fixtures/good.json'), 'test/fixtures/good.json')
 })

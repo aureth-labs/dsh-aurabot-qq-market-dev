@@ -66,7 +66,7 @@
 
 - [ ] id 一律按 `owner/name` 解析，`owner` 取 `market.json` 条目的 `owner` 字段（作者没写进 package.json）
 - [ ] 配置文件里的键、面板路由、日志里的模块名都要跟着用 qualified id，否则重名会串
-- [ ] `requires` 解析：先查内置（无前缀），再查 `scope/name`
+- [ ] `requires` 解析：先查内置（无前缀），再查 `owner/name`
 - [ ] 老模块保持平铺 id 不变（它们没有 `/`，天然不冲突）
 - [ ] 同一 scope 下重名：市场侧按 `-2`、`-3` 后缀自动改名，宿主按改名后的 id 安装即可
 

@@ -67,7 +67,7 @@ export interface Registry {
 
 /** 生成的 market.json 里的一条。 */
 export interface MarketEntry {
-  /** `scope/name`，全局唯一 */
+  /** `owner/name`，全局唯一 */
   id: string
   owner: string
   name: string

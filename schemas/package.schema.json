@@ -51,7 +51,7 @@
           "type": "array",
           "uniqueItems": true,
           "items": { "type": "string", "pattern": "^([a-z0-9][a-z0-9-]{0,38}/[a-z0-9][a-z0-9-]{0,38}|[a-z][a-z0-9-]{1,39})$" },
-          "description": "依赖的模块 id：scope/name，或内置模块 id"
+          "description": "依赖的模块 id：owner/name，或内置模块 id"
         },
         "platforms": {
           "type": "array",

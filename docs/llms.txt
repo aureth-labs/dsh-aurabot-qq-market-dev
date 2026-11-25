@@ -13,9 +13,10 @@
 ```
 repo/
 ├─ .github/workflows/release.yml   # 模板自带，按版本变化构建并发布
-├─ scripts/build.mjs               # 模板自带，检测变更 + 打包 + 回写 artifact
+├─ scripts/release.mjs             # 模板自带，检测变更 + 打包 + 回写 artifact
 └─ modules/<name>/
    ├─ package.json                 # 唯一清单（name/version/aurabot 段）
+   ├─ build.mjs                    # 模块自带：先编后台，再编面板并包成函数体
    ├─ tsconfig.json                # 后台：NodeNext，outDir=lib，rootDir=src
    ├─ tsconfig.client.json         # 面板：outDir=dist，rootDir=client
    ├─ src/index.ts                 # 入口，默认导出插件对象

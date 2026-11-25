@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AuraBot 插件市场</title>
+<link rel="icon" href="data:,">
+<style>
+:root {
+  --bg: #fff7fa;
+  --fg: #2a2430;
+  --muted: #7d7386;
+  --card: #ffffff;
+  --line: #f2d7e2;
+  --accent: #ff6f9c;
+  --accent-soft: #ffe6ee;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17141c;
+    --fg: #f3eef6;
+    --muted: #a79fb2;
+    --card: #201c27;
+    --line: #332c3d;
+    --accent: #ff8fb2;
+    --accent-soft: #2c2230;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 40px 20px 64px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 15px/1.6 system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif;
+}
+.wrap { max-width: 1080px; margin: 0 auto; }
+header.top { margin-bottom: 28px; }
+h1 { margin: 0 0 6px; font-size: 26px; letter-spacing: .02em; }
+h1 span { color: var(--accent); }
+.meta { color: var(--muted); font-size: 13px; }
+.meta a { color: var(--accent); text-decoration: none; }
+.meta a:hover { text-decoration: underline; }
+.grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.card-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.card-head h2 { margin: 0; font-size: 17px; }
+.id { font-size: 12px; color: var(--muted); }
+.desc { margin: 0; color: var(--muted); font-size: 13.5px; }
+.desc-empty { font-style: italic; opacity: .7; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag {
+  font-size: 11.5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.tag-category { background: var(--accent); color: #fff; }
+.tag-verified { background: transparent; border: 1px solid var(--line); color: var(--muted); }
+.card-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px dashed var(--line);
+  padding-top: 10px;
+  font-size: 12.5px;
+}
+.version { color: var(--muted); }
+.download { color: var(--accent); text-decoration: none; }
+.download:hover { text-decoration: underline; }
+.empty { color: var(--muted); }
+footer.bottom { margin-top: 36px; color: var(--muted); font-size: 12.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>AuraBot <span>插件市场</span></h1>
+    <p class="meta">
+      收录 2 个插件 · 生成于 2026-11-25T12:37:52.612Z<br>
+      给宿主读的索引：<a href="./market.json">market.json</a> ·
+      构建报告：<a href="./report.md">report.md</a>
+    </p>
+  </header>
+  
+  <main class="grid">
+<article class="card">
+  <header class="card-head">
+    <h2>语音点歌</h2>
+    <code class="id">shangxueink/playmusic</code>
+  </header>
+  <p class="desc">点歌：搜哔哩哔哩/网易云的原唱，按匹配度挑最优一首，下载后抽成 mp3 当语音条发到当前会话。不需要任何 Cookie</p>
+  <div class="tags"><span class="tag tag-category">社交</span><span class="tag">filesystem</span><span class="tag">network</span><span class="tag">process</span><span class="tag tag-platform">qq</span></div>
+  <footer class="card-foot">
+    <span class="version">v1.0.1</span>
+    <a class="download" href="https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/releases/download/playmusic-v1.0.1/playmusic-v1.0.1.zip">下载 20018 字节</a>
+  </footer>
+</article>
+<article class="card">
+  <header class="card-head">
+    <h2>转告主人反馈</h2>
+    <code class="id">shangxueink/tell-owner</code>
+  </header>
+  <p class="desc">群里/私聊有人托话，记成工单送达主人；主人处理完，机器人自己找对工单回群引用原消息告诉本人</p>
+  <div class="tags"><span class="tag tag-category">社交</span><span class="tag">plugin-config</span><span class="tag">filesystem</span><span class="tag">network</span><span class="tag">plugin-internals</span><span class="tag tag-platform">qq</span></div>
+  <footer class="card-foot">
+    <span class="version">v1.0.2</span>
+    <a class="download" href="https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/releases/download/tell-owner-v1.0.2/tell-owner-v1.0.2.zip">下载 19628 字节</a>
+  </footer>
+</article>
+  </main>
+  <footer class="bottom">
+    想要收录自己的插件：往仓库的 <code>registry.jsonl</code> 提一个 PR，一行一个 <code>package.json</code> 链接。
+  </footer>
+</div>
+</body>
+</html>

@@ -93,6 +93,7 @@ jobs:
       - name: 覆盖 market-latest 这个唯一 release
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
           TAG='market-latest'

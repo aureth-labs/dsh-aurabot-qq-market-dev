@@ -14,14 +14,30 @@ AuraBot 插件市场的**索引与镜像构建**。
 npm install
 npm run build            # tsc → lib/
 npm run market           # registry.jsonl → dist/market.json + dist/report.md
-npm test                 # 12 条校验/构建用例
+npm test                 # 15 条校验/构建用例
 ```
+
+## 插件市场镜像源
+
+宿主读的就是这份索引，由本仓库的 Actions 自动构建，每天重建一次：
+
+```
+https://github.com/aureth-labs/dsh-aurabot-qq-market-dev/blob/market/market.json
+```
+
+`market` 分支同目录还有 `report.md`，记录这次收录了哪些包、跳过了哪些、为什么跳过。
+
+## 文档
+
+文档站在 `docs` 分支上，用 VitePress 构建、Actions 自动发布：
+
+- 站点：https://aureth-labs.github.io/dsh-aurabot-qq-market-dev/
+- 给 AI 看的规范：https://aureth-labs.github.io/dsh-aurabot-qq-market-dev/llms.txt
+- 源码：`docs` 分支下的 `docs/` 目录
 
 ## 目录
 
 ```
-docs/ARCHITECTURE.md   设计与决策记录（先看这个）
-docs/HOST-CHANGES.md   主框架 dsh-aurabot-qq 的改造清单
 schemas/               package.json / market.json 的 JSON Schema
 src/                   构建器（TypeScript）
 registry.jsonl         收录表（一行一个链接，`#` 是注释）
@@ -35,6 +51,6 @@ verified.json          已审核的 id 列表
 - [x] 主框架改造清单
 - [x] 作者侧模板仓库（Actions + 两个示例插件）
 - [x] 市场仓库自己的 GitHub Actions（定时重建 + 发布到 `market` 分支）
-- [x] `docs/llms.txt`
-- [ ] 文档站（VitePress）
+- [x] `llms.txt`（随文档站发布在 `/llms.txt`）
+- [x] 文档站（VitePress，`docs` 分支）
 

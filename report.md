@@ -1,6 +1,6 @@
 # 插件市场构建报告
 
-- 生成时间：2026-11-24T16:54:23.651Z
+- 生成时间：2026-11-25T02:04:00.368Z
 - 收录成功：2
 - 跳过（清单不合法）：0
 - 重命名（id 冲突）：0
@@ -9,5 +9,5 @@
 
 | id | 版本 | 分类 | 审核 |
 | --- | --- | --- | --- |
-| shangxueink/playmusic | 1.0.0 | social | 未审核 |
-| shangxueink/tell-owner | 1.0.1 | social | 未审核 |
+| shangxueink/playmusic | 1.0.1 | social | 未审核 |
+| shangxueink/tell-owner | 1.0.2 | social | 未审核 |

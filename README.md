@@ -56,5 +56,5 @@ verified.json          已审核的 id 列表
 - [x] 主框架改造清单
 - [x] 作者侧模板仓库（Actions + 两个示例插件）
 - [x] 市场仓库自己的 GitHub Actions：构建索引后同时发 Pages、固定 tag 的 Release、`market` 分支
-- [x] Pages 列表页（`index.html`，服务端渲染，不开 JS 也能看）
+- [x] Pages 插件市场前端页（`index.html`）：卡片全部服务端渲染，JS 只加翻页、每行列数、右下角操作菜单；页内还带一份构建报告（跳过/改名的清单）
 

@@ -60,7 +60,7 @@ async function main(): Promise<number> {
 
   // Pages 的根路径得有东西，否则 / 直接 404，看着像没部署成功。
   const landingPath = resolve(dirname(outPath), 'index.html')
-  await writeFile(landingPath, renderLanding(result.index), 'utf8')
+  await writeFile(landingPath, renderLanding(result), 'utf8')
 
   console.log(`收录 ${result.index.entries.length} 个，跳过 ${result.failures.length} 个，重命名 ${result.renamed.length} 个`)
   for (const failure of result.failures) console.warn(`! ${failure.id ?? failure.source}：${failure.reason}`)

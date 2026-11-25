@@ -50,7 +50,8 @@ jobs:
         with:
           path: site/docs/.vitepress/dist
       - name: 等 artifact 变成可查
-        # deploy-pages 在 upload 完成 0.3 秒内就去查，偶尔查不到（0 个）或多查（重跑时 2 个）。
+        # deploy-pages 在 upload 完成 0.3 秒内就按名字去查，偶尔查到 0 个。
+        # 这里用同样的查询口径（?name=github-pages）轮询到看得见为止。
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -58,7 +59,7 @@ jobs:
           for i in $(seq 1 20); do
             n=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
               -H 'Accept: application/vnd.github+json' \
-              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts?name=github-pages" \
               | jq '[.artifacts[] | select(.name == "github-pages" and .expired == false)] | length')
             echo "尝试 $i：github-pages artifact 数量 = $n"
             if [ "$n" -ge 1 ]; then exit 0; fi

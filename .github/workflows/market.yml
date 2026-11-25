@@ -1,9 +1,20 @@
 name: Market
 
+# 这个仓库只做一件事：构建插件市场镜像源，然后把它发出去。
+# 三个出口同一份内容：
+#   - GitHub Pages：https://aureth-labs.github.io/dsh-aurabot-qq-market-dev/
+#   - 固定 tag 的 Release（每次覆盖同一个 tag，release 数量恒为 1）
+#   - market 分支（raw 直链，客户端最省事）
 on:
   push:
     branches: [main]
-    paths: ['registry.jsonl', 'verified.json', 'src/**', 'schemas/**', 'package.json']
+    paths:
+      - 'registry.jsonl'
+      - 'verified.json'
+      - 'src/**'
+      - 'schemas/**'
+      - 'package.json'
+      - '.github/workflows/market.yml'
   schedule:
     # 每天 03:00 UTC 重建一次，兜住作者仓库的日常更新
     - cron: '0 3 * * *'
@@ -14,6 +25,7 @@ permissions:
 
 concurrency:
   group: market
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -43,7 +55,61 @@ jobs:
           name: market
           path: dist/
 
-  publish:
+  # 出口一：GitHub Pages。人和宿主都能直接开，不受 raw 的限流影响。
+  pages:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: market
+          path: dist
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: dist
+      - id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+
+  # 出口二：固定 tag 的 Release。每次覆盖同一 tag 的附件，不会越堆越多。
+  release:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: market
+          path: dist
+      - name: 覆盖 market-latest 这个唯一 release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG='market-latest'
+          TS=$(jq -r .generatedAt dist/market.json)
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/market.json dist/report.md dist/index.html --clobber
+            gh release edit "$TAG" \
+              --title '插件市场镜像源' \
+              --notes "滚动更新：附件永远是最新一版。本次构建 ${TS}"
+          else
+            gh release create "$TAG" dist/market.json dist/report.md dist/index.html \
+              --title '插件市场镜像源' \
+              --notes "滚动更新：附件永远是最新一版。本次构建 ${TS}"
+          fi
+
+  # 出口三：market 分支。raw 直链给客户端做兜底，也方便 git 侧回滚。
+  branch:
     needs: build
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -68,9 +134,9 @@ jobs:
             git worktree add -q --orphan -B market .market
           fi
           mkdir -p .market
-          cp dist/market.json dist/report.md .market/
+          cp dist/market.json dist/report.md dist/index.html .market/
           cd .market
-          git add market.json report.md
+          git add market.json report.md index.html
           if git diff --cached --quiet; then
             echo "索引没有变化"
             exit 0

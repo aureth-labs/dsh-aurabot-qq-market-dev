@@ -3,6 +3,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { buildMarket } from './build.js'
 import { parseRegistry } from './registry.js'
+import { renderLanding } from './landing.js'
 import { renderReport } from './report.js'
 
 const arg = (name: string, fallback: string): string => {
@@ -57,11 +58,16 @@ async function main(): Promise<number> {
   await mkdir(dirname(reportPath), { recursive: true })
   await writeFile(reportPath, renderReport(result))
 
+  // Pages 的根路径得有东西，否则 / 直接 404，看着像没部署成功。
+  const landingPath = resolve(dirname(outPath), 'index.html')
+  await writeFile(landingPath, renderLanding(result.index), 'utf8')
+
   console.log(`收录 ${result.index.entries.length} 个，跳过 ${result.failures.length} 个，重命名 ${result.renamed.length} 个`)
   for (const failure of result.failures) console.warn(`! ${failure.id ?? failure.source}：${failure.reason}`)
   for (const item of result.renamed) console.warn(`! id 冲突：${item.from} → ${item.to}`)
   console.log(`索引：${outPath}`)
   console.log(`报告：${reportPath}`)
+  console.log(`落地页：${landingPath}`)
 
   // 默认只当警告：单个作者写错清单不该卡住整条流水线。需要严格模式时加 --strict。
   if (result.failures.length && flag('--strict')) return 1

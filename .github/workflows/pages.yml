@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment2.outputs.page_url }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -62,10 +62,24 @@ jobs:
               "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts?name=github-pages" \
               | jq '[.artifacts[] | select(.name == "github-pages" and .expired == false)] | length')
             echo "尝试 $i：github-pages artifact 数量 = $n"
-            if [ "$n" -ge 1 ]; then exit 0; fi
+            if [ "$n" -ge 1 ]; then
+              # deploy-pages 查的是 Actions 内部 artifact 服务，比 REST 慢一拍，给它几秒
+              sleep 10
+              exit 0
+            fi
             sleep 3
           done
           echo "artifact 一直查不到" >&2
           exit 1
       - id: deployment
+        continue-on-error: true
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+      - name: 重试部署
+        id: deployment2
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+      - name: 两次部署都失败
+        if: steps.deployment.outcome == 'failure' && steps.deployment2.outcome == 'failure'
+        run: |
+          echo "两次 deploy-pages 都失败，多半是 artifact 服务抖动，手动重跑这个 workflow 即可" >&2
+          exit 1

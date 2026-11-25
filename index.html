@@ -27,6 +27,9 @@
   --vp-c-success-soft: rgba(16, 185, 129, 0.14);
   --vp-shadow-2: 0 3px 12px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.07);
   --vp-shadow-3: 0 12px 32px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.08);
+  /* 置顶球的实心色：亮色用 brand-1，暗色用 brand-3，都保证白字够读 */
+  --ball-fill: #3451b2;
+  --ball-fill-hover: #3a5ccc;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -46,6 +49,8 @@
     --vp-c-default-soft: rgba(101, 117, 133, 0.16);
     --vp-c-success-1: #3dd68c;
     --vp-c-success-soft: rgba(16, 185, 129, 0.16);
+    --ball-fill: #3e63dd;
+    --ball-fill-hover: #5c73e7;
   }
 }
 html.dark {
@@ -65,6 +70,8 @@ html.dark {
   --vp-c-default-soft: rgba(101, 117, 133, 0.16);
   --vp-c-success-1: #3dd68c;
   --vp-c-success-soft: rgba(16, 185, 129, 0.16);
+  --ball-fill: #3e63dd;
+  --ball-fill-hover: #5c73e7;
 }
 * { box-sizing: border-box; }
 body {
@@ -85,6 +92,7 @@ code { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, mo
 .top h1 em { font-style: normal; color: var(--vp-c-brand-1); }
 .meta { margin: 0; color: var(--vp-c-text-2); font-size: 13.5px; }
 .meta .dot { color: var(--vp-c-text-3); margin: 0 6px; }
+.meta .stamp { font-variant-numeric: tabular-nums; }
 
 .toolbar {
   position: sticky;
@@ -99,17 +107,87 @@ code { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, mo
   background: var(--vp-c-bg);
   border-bottom: 1px solid var(--vp-c-divider);
 }
-.field { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--vp-c-text-2); }
-.field select {
-  font: inherit;
-  font-size: 13px;
-  color: var(--vp-c-text-1);
+.toolbar-label { font-size: 13px; color: var(--vp-c-text-2); }
+.toolbar-label b { color: var(--vp-c-text-1); font-weight: 600; }
+.toolbar .spacer { flex: 1 1 auto; }
+
+.search {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  flex: 1 1 360px;
+  max-width: 720px;
+  min-width: 210px;
+  padding: 5px 10px 5px 32px;
   background: var(--vp-c-bg-alt);
   border: 1px solid var(--vp-c-divider);
   border-radius: 8px;
-  padding: 4px 8px;
+  cursor: text;
+  transition: border-color .2s, background-color .2s, box-shadow .2s;
 }
-.toolbar .spacer { flex: 1 1 auto; }
+.search:focus-within {
+  border-color: var(--vp-c-brand-2);
+  background: var(--vp-c-bg);
+  box-shadow: 0 0 0 3px var(--vp-c-brand-soft);
+}
+.search .icon {
+  position: absolute;
+  left: 10px;
+  top: 9px;
+  width: 15px;
+  height: 15px;
+  color: var(--vp-c-text-3);
+  pointer-events: none;
+}
+.search input {
+  flex: 1 1 120px;
+  min-width: 88px;
+  width: auto;
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--vp-c-text-1);
+  background: transparent;
+  border: none;
+  padding: 2px 0;
+  outline: none;
+}
+.search input::placeholder { color: var(--vp-c-text-3); }
+
+/* 让 chip 自己参与 .search 的换行布局，而不是挤成一块 */
+.chips { display: contents; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 22px;
+  padding: 0 3px 0 8px;
+  border-radius: 6px;
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+  font-size: 12.5px;
+  line-height: 1;
+  white-space: nowrap;
+  animation: chip-in .16s ease;
+}
+@keyframes chip-in {
+  from { opacity: 0; transform: scale(.88); }
+  to { opacity: 1; transform: none; }
+}
+.chip-x {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1;
+  padding: 0 3px;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: .6;
+}
+.chip-x:hover { opacity: 1; background: var(--vp-c-brand-1); color: var(--vp-c-bg-elv); }
 
 .pager { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 .pager button {
@@ -138,7 +216,8 @@ code { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, mo
 .grid {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+  scroll-margin-top: 64px;
 }
 .card {
   display: flex;
@@ -176,6 +255,17 @@ code { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, mo
   white-space: nowrap;
 }
 .ident { font-size: 11.5px; color: var(--vp-c-text-3); }
+.owner {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--vp-c-brand-1);
+  cursor: pointer;
+  border-radius: 3px;
+}
+.owner:hover { text-decoration: underline; }
+.owner:focus-visible { outline: 2px solid var(--vp-c-brand-2); outline-offset: 2px; }
 .desc {
   margin: 0;
   font-size: 13.5px;
@@ -284,19 +374,85 @@ code { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, mo
 .report-link { margin: 14px 0 0; font-size: 13px; }
 
 .empty { color: var(--vp-c-text-2); font-size: 14px; }
+.nomatch { color: var(--vp-c-text-2); font-size: 14px; margin: 8px 0 0; }
 .foot { margin-top: 40px; font-size: 12.5px; color: var(--vp-c-text-3); }
 .foot code { font-size: 12px; }
+
+/* 右下角的滚动进度球：滚到底变置顶按钮 */
+.ball {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 40;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 50%;
+  background: var(--vp-c-bg-elv);
+  color: var(--vp-c-text-2);
+  box-shadow: var(--vp-shadow-2);
+  cursor: default;
+  opacity: 0;
+  transform: translateY(10px) scale(.88);
+  pointer-events: none;
+  transition: opacity .28s ease, transform .28s cubic-bezier(.34, 1.36, .64, 1),
+    background-color .28s ease, color .28s ease, box-shadow .28s ease;
+}
+.ball.is-on { opacity: 1; transform: none; }
+.ball.is-top {
+  background: var(--ball-fill);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: var(--vp-shadow-3);
+  cursor: pointer;
+  pointer-events: auto;
+}
+.ball.is-top:hover { background: var(--ball-fill-hover); transform: translateY(-2px); }
+.ball-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  transition: opacity .2s ease;
+}
+.ball-track { fill: none; stroke: var(--vp-c-border); stroke-width: 3; opacity: .55; }
+.ball-bar {
+  fill: none;
+  stroke: var(--vp-c-brand-1);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dashoffset .16s linear;
+}
+.ball.is-top .ball-ring { opacity: 0; }
+.ball-pct, .ball-arrow {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transition: opacity .18s ease, transform .24s cubic-bezier(.34, 1.36, .64, 1);
+}
+.ball-pct { font-size: 12px; font-weight: 600; color: var(--vp-c-text-1); font-variant-numeric: tabular-nums; }
+.ball-arrow { font-size: 19px; opacity: 0; transform: translateY(7px) scale(.6); }
+.ball.is-top .ball-pct { opacity: 0; transform: scale(.7); }
+.ball.is-top .ball-arrow { opacity: 1; transform: none; }
+
+@media (max-width: 620px) {
+  .search { flex: 1 1 100%; }
+  .ball { right: 14px; bottom: 14px; width: 50px; height: 50px; }
+  .ball-pct { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ball, .ball-pct, .ball-arrow, .ball-ring, .ball-bar { transition: none; }
+}
 
 .embed body, body.embed { padding: 16px 14px 40px; }
 body.embed .top h1 { font-size: 20px; }
 body.embed .report { margin-top: 28px; }
 
-@media (max-width: 900px) {
-  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
 @media (max-width: 620px) {
   body { padding: 20px 14px 56px; }
-  .grid { grid-template-columns: minmax(0, 1fr); }
   .toolbar { gap: 10px; }
 }
 </style>
@@ -306,40 +462,35 @@ body.embed .report { margin-top: 28px; }
   <header class="top">
     <h1>AuraBot <em>插件市场</em></h1>
     <p class="meta">
-      收录 2 个插件<span class="dot">·</span>生成于 2026-11-25T12:53:23.640Z<span class="dot">·</span>
-      <a href="./market.json">market.json</a><span class="dot">·</span><a href="./report.md">report.md</a>
+      收录 2 个插件<span class="dot">·</span>生成于
+      <time class="stamp" datetime="2026-11-25T13:49:07.788Z" data-iso="2026-11-25T13:49:07.788Z" title="2026-11-25T13:49:07.788Z">2026-11-25 21:49:07 (GMT+8)</time><span class="dot">·</span><a href="./market.json">market.json</a>
     </p>
   </header>
 
   <div class="toolbar">
-    <label class="field">每行
-      <select id="cols" aria-label="每行显示多少个插件">
-        <option value="2">2 个</option>
-        <option value="3" selected>3 个</option>
-        <option value="4">4 个</option>
-        <option value="6">6 个</option>
-      </select>
-    </label>
-    <label class="field">每页
-      <select id="size" aria-label="每页显示多少个插件">
-        <option value="6">6 个</option>
-        <option value="12" selected>12 个</option>
-        <option value="24">24 个</option>
-        <option value="48">48 个</option>
-      </select>
-    </label>
+    <div class="search" id="search-box">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="M20 20l-4-4"></path>
+      </svg>
+      <span class="chips" id="chips"></span>
+      <input id="search" type="text" inputmode="search" autocomplete="off" spellcheck="false"
+        placeholder="搜插件名、简介或标签，回车确认" aria-label="搜索插件">
+    </div>
+    <span class="toolbar-label" id="page-count">第 <b>1</b> / 1 页</span>
     <span class="spacer"></span>
     <nav class="pager" id="pager-top" aria-label="翻页" hidden></nav>
   </div>
 
+  <p class="nomatch" id="no-match" hidden></p>
   
   <main class="grid" id="grid">
-<article class="card" data-name="语音点歌 shangxueink/playmusic 点歌：搜哔哩哔哩/网易云的原唱，按匹配度挑最优一首，下载后抽成 mp3 当语音条发到当前会话。不需要任何 cookie">
+<article class="card" data-search="语音点歌 shangxueink/playmusic playmusic shangxueink 点歌：搜哔哩哔哩/网易云的原唱，按匹配度挑最优一首，下载后抽成 mp3 当语音条发到当前会话。不需要任何 cookie 社交 social filesystem network process qq " data-owner="shangxueink">
   <div class="card-head">
     <span class="badge" aria-hidden="true">社</span>
     <div class="card-title">
       <h2>语音点歌</h2>
-      <code class="ident">shangxueink/playmusic</code>
+      <code class="ident"><button class="owner" type="button" data-owner="shangxueink" title="只看 shangxueink 的插件">shangxueink</button>/playmusic</code>
     </div>
   </div>
   <p class="desc">点歌：搜哔哩哔哩/网易云的原唱，按匹配度挑最优一首，下载后抽成 mp3 当语音条发到当前会话。不需要任何 Cookie</p>
@@ -355,12 +506,12 @@ body.embed .report { margin-top: 28px; }
     </details>
   </div>
 </article>
-<article class="card" data-name="转告主人反馈 shangxueink/tell-owner 群里/私聊有人托话，记成工单送达主人；主人处理完，机器人自己找对工单回群引用原消息告诉本人">
+<article class="card" data-search="转告主人反馈 shangxueink/tell-owner tell-owner shangxueink 群里/私聊有人托话，记成工单送达主人；主人处理完，机器人自己找对工单回群引用原消息告诉本人 社交 social plugin-config filesystem network plugin-internals qq " data-owner="shangxueink">
   <div class="card-head">
     <span class="badge" aria-hidden="true">社</span>
     <div class="card-title">
       <h2>转告主人反馈</h2>
-      <code class="ident">shangxueink/tell-owner</code>
+      <code class="ident"><button class="owner" type="button" data-owner="shangxueink" title="只看 shangxueink 的插件">shangxueink</button>/tell-owner</code>
     </div>
   </div>
   <p class="desc">群里/私聊有人托话，记成工单送达主人；主人处理完，机器人自己找对工单回群引用原消息告诉本人</p>
@@ -389,26 +540,129 @@ body.embed .report { margin-top: 28px; }
   <p class="report-link"><a href="./report.md">完整报告 report.md</a></p>
 </section>
 
-  <p class="foot">想收录自己的插件：往仓库的 <code>registry.jsonl</code> 提一个 PR，一行一个 <code>package.json</code> 链接。</p>
+  <p class="foot">想收录自己的插件？收录流程写在<a
+    href="https://aureth-labs.github.io/dsh-aurabot-qq-docs/" target="_blank" rel="noreferrer noopener">开发文档</a>里。</p>
 </div>
+
+<button class="ball" id="ball" type="button" aria-label="回到顶部" title="回到顶部">
+  <svg class="ball-ring" viewBox="0 0 56 56" aria-hidden="true">
+    <circle class="ball-track" cx="28" cy="28" r="23"></circle>
+    <circle class="ball-bar" id="ball-bar" cx="28" cy="28" r="23"></circle>
+  </svg>
+  <span class="ball-pct" id="ball-pct">0%</span>
+  <span class="ball-arrow" aria-hidden="true">↑</span>
+</button>
 <script>
 (function () {
+  // 生成时间：服务器按 UTC+8 先写好一份，这里换成访问者本机时区。
+  var stamp = document.querySelector('time[data-iso]');
+  if (stamp) {
+    var when = new Date(stamp.getAttribute('data-iso'));
+    if (!isNaN(when.getTime())) {
+      var fmt = new Intl.DateTimeFormat('en-CA', {
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        hourCycle: 'h23', timeZoneName: 'shortOffset'
+      });
+      var bits = {};
+      fmt.formatToParts(when).forEach(function (part) { bits[part.type] = part.value; });
+      stamp.textContent = bits.year + '-' + bits.month + '-' + bits.day + ' ' +
+        bits.hour + ':' + bits.minute + ':' + bits.second + ' (' + (bits.timeZoneName || '') + ')';
+    }
+  }
+
   var grid = document.getElementById('grid');
   if (!grid) return;
 
-  var cards = Array.prototype.slice.call(grid.children);
-  var colsSel = document.getElementById('cols');
-  var sizeSel = document.getElementById('size');
+  var PAGE_SIZE = 24;
+  var items = Array.prototype.map.call(grid.children, function (card) {
+    return {
+      el: card,
+      text: card.getAttribute('data-search') || '',
+      owner: card.getAttribute('data-owner') || ''
+    };
+  });
+  var visible = items;
   var pagers = [document.getElementById('pager-top'), document.getElementById('pager-bottom')];
-  var total = cards.length;
+  var counter = document.getElementById('page-count');
+  var nomatch = document.getElementById('no-match');
+  var search = document.getElementById('search');
+  var searchBox = document.getElementById('search-box');
+  var chipBar = document.getElementById('chips');
+  var terms = [];
+  var searching = false;
   var page = 1;
 
   if (window.self !== window.top || /(^|[?&])embed(=|&|$)/.test(location.search)) {
     document.body.classList.add('embed');
   }
 
-  function size() { return parseInt(sizeSel.value, 10) || 12; }
-  function pageCount() { return Math.max(1, Math.ceil(total / size())); }
+  function pageCount() { return Math.max(1, Math.ceil(visible.length / PAGE_SIZE)); }
+
+  // 一个词条：@owner 只比作者，其余在 text 里找子串（text 已小写）。
+  function makeTerm(raw) {
+    var lower = raw.toLowerCase();
+    if (raw.charAt(0) === '@') return { raw: raw, owner: lower.slice(1), text: '' };
+    return { raw: raw, owner: null, text: lower };
+  }
+
+  // 已确认的标签 + 输入框里还没确认的草稿，一起当条件。
+  function liveTerms() {
+    var list = terms.slice();
+    var draft = search ? search.value.trim() : '';
+    if (draft) list.push(makeTerm(draft));
+    return list;
+  }
+
+  function matches(item, list) {
+    for (var i = 0; i < list.length; i++) {
+      var term = list[i];
+      if (term.owner !== null) {
+        if (!term.owner) continue;
+        if (item.owner.indexOf(term.owner) !== 0) return false;
+      } else if (item.text.indexOf(term.text) < 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function hasTerm(raw) {
+    var lower = raw.toLowerCase();
+    return terms.some(function (term) { return term.raw.toLowerCase() === lower; });
+  }
+
+  function renderChips() {
+    if (!chipBar) return;
+    chipBar.textContent = '';
+    terms.forEach(function (term, index) {
+      var chip = document.createElement('span');
+      chip.className = 'chip';
+      var text = document.createElement('span');
+      text.textContent = term.raw;
+      var remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'chip-x';
+      remove.setAttribute('aria-label', '移除 ' + term.raw);
+      remove.textContent = '×';
+      remove.addEventListener('click', function () {
+        terms.splice(index, 1);
+        renderChips();
+        run();
+      });
+      chip.appendChild(text);
+      chip.appendChild(remove);
+      chipBar.appendChild(chip);
+    });
+  }
+
+  function run() {
+    var list = liveTerms();
+    searching = list.length > 0;
+    visible = items.filter(function (item) { return matches(item, list); });
+    page = 1;
+    apply();
+  }
 
   function label(cur, count) {
     var out = [];
@@ -457,33 +711,116 @@ body.embed .report { margin-top: 28px; }
   }
 
   function apply() {
-    var from = (page - 1) * size();
-    var to = from + size();
-    for (var i = 0; i < total; i++) {
-      if (i >= from && i < to) cards[i].removeAttribute('hidden');
-      else cards[i].setAttribute('hidden', '');
-    }
+    var i;
+    for (i = 0; i < items.length; i++) items[i].el.setAttribute('hidden', '');
+    var from = (page - 1) * PAGE_SIZE;
+    var to = Math.min(from + PAGE_SIZE, visible.length);
+    for (i = from; i < to; i++) visible[i].el.removeAttribute('hidden');
+
     pagers.forEach(paint);
+    if (counter) {
+      var head = searching ? '找到 ' + visible.length + ' 个 · ' : '';
+      counter.innerHTML = head + '第 <b>' + page + '</b> / ' + pageCount() + ' 页';
+    }
+    if (nomatch) {
+      if (searching && !visible.length) {
+        var shown = liveTerms().map(function (term) { return term.raw; }).join(' ');
+        nomatch.textContent = '没有匹配「' + shown + '」的插件。';
+        nomatch.removeAttribute('hidden');
+      } else {
+        nomatch.setAttribute('hidden', '');
+      }
+    }
+  }
+
+  // 滚到网格顶部，扣掉吸顶工具栏的高度，别让第一行藏在工具栏底下。
+  function scrollToGrid() {
+    var bar = document.querySelector('.toolbar');
+    var offset = (bar ? bar.offsetHeight : 0) + 10;
+    var top = grid.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({ top: top, behavior: 'smooth' });
   }
 
   function go(target) {
     page = Math.min(Math.max(1, target), pageCount());
     apply();
-    grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    scrollToGrid();
   }
 
-  if (colsSel) {
-    grid.style.setProperty('--cols', colsSel.value);
-    colsSel.addEventListener('change', function () {
-      grid.style.setProperty('--cols', colsSel.value);
+  if (search) {
+    var typing;
+    // 边打边看结果：草稿也当条件，但只有回车/失焦才固化成 chip。
+    var preview = function () {
+      clearTimeout(typing);
+      typing = setTimeout(run, 80);
+    };
+
+    var commit = function () {
+      var draft = search.value.trim();
+      if (!draft) return;
+      if (!hasTerm(draft)) terms.push(makeTerm(draft));
+      search.value = '';
+      renderChips();
+      run();
+    };
+
+    search.addEventListener('input', preview);
+    search.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        commit();
+        return;
+      }
+      if (event.key === 'Backspace' && !search.value && terms.length) {
+        terms.pop();
+        renderChips();
+        run();
+        return;
+      }
+      if (event.key !== 'Escape') return;
+      if (search.value) {
+        search.value = '';
+        run();
+      } else if (terms.length) {
+        terms = [];
+        renderChips();
+        run();
+      }
+    });
+    // 点到搜索框外面就算确认；点到 chip 的 × 不算（那是在框内操作）。
+    search.addEventListener('blur', function (event) {
+      if (searchBox && event.relatedTarget && searchBox.contains(event.relatedTarget)) return;
+      commit();
+    });
+    if (searchBox) {
+      searchBox.addEventListener('click', function (event) {
+        if (event.target === searchBox || event.target === chipBar) search.focus();
+      });
+    }
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'k' && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+        search.focus();
+        search.select();
+      }
     });
   }
-  if (sizeSel) {
-    sizeSel.addEventListener('change', function () {
-      page = 1;
-      apply();
-    });
-  }
+
+  // 点卡片里的作者名 → 加一个 @owner 标签，只看这个作者。
+  grid.addEventListener('click', function (event) {
+    var trigger = event.target.closest ? event.target.closest('.owner') : null;
+    if (!trigger) return;
+    event.preventDefault();
+    var owner = trigger.getAttribute('data-owner');
+    if (!owner) return;
+    var raw = '@' + owner;
+    if (!hasTerm(raw)) {
+      terms.push(makeTerm(raw));
+      renderChips();
+    }
+    run();
+    scrollToGrid();
+  });
 
   // 一次只开一个菜单；点空白处或按 Esc 收起。
   var menus = Array.prototype.slice.call(document.querySelectorAll('details.menu'));
@@ -509,6 +846,41 @@ body.embed .report { margin-top: 28px; }
     if (pager) pager.removeAttribute('hidden');
   });
   apply();
+
+  // 右下角进度球：环按滚动百分比收放，到 92% 变成置顶按钮。
+  var ball = document.getElementById('ball');
+  var bar = document.getElementById('ball-bar');
+  var pct = document.getElementById('ball-pct');
+  if (ball && bar && pct) {
+    var R = 23;
+    var C = 2 * Math.PI * R;
+    bar.style.strokeDasharray = C + ' ' + C;
+    bar.style.strokeDashoffset = C;
+
+    var pending = false;
+    var sync = function () {
+      pending = false;
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      var ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      bar.style.strokeDashoffset = C * (1 - ratio);
+      pct.textContent = Math.round(ratio * 100) + '%';
+      // 页面短到不用滚（或是被搜索筛得只剩几张卡）就不显示，省得 0% 的球飘在那儿。
+      ball.classList.toggle('is-on', max > 0 && ratio > 0.02);
+      ball.classList.toggle('is-top', ratio >= 0.92);
+    };
+
+    window.addEventListener('scroll', function () {
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(sync);
+    }, { passive: true });
+    window.addEventListener('resize', sync);
+    ball.addEventListener('click', function () {
+      if (!ball.classList.contains('is-top')) return;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    sync();
+  }
 })();
 </script>
 </body>

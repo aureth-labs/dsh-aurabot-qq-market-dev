@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "generatedAt": "2026-11-25T02:06:39.935Z",
+  "generatedAt": "2026-11-25T03:09:54.177Z",
   "entries": [
     {
       "id": "shangxueink/playmusic",
@@ -29,7 +29,7 @@
         "sha256": "f8b92b88b13abd131fcf21b79d71012ffe4e2f66400d4d501840daa429e8c517",
         "size": 20018
       },
-      "source": "https://raw.githubusercontent.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/main/modules/playmusic/package.json",
+      "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/playmusic/package.json",
       "verified": false
     },
     {
@@ -60,7 +60,7 @@
         "sha256": "6c89f181cd7092edc552441841551021dc17ffd13c61faa232cff63bdd0052aa",
         "size": 19628
       },
-      "source": "https://raw.githubusercontent.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/main/modules/tell-owner/package.json",
+      "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/tell-owner/package.json",
       "verified": false
     }
   ]

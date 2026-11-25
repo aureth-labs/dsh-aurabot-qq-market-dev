@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises'
 import { DEFAULT_PANEL, ownerFromSource, qualify, validateManifest } from './validate.js'
-import type { MarketEntry, MarketIndex, PackageManifest, Registry } from './types.js'
+import type { MarketEntry, MarketIndex, PackageManifest, Source } from './types.js'
 
 export interface Failure {
   source: string
@@ -81,21 +81,21 @@ function toEntry(candidate: Candidate, id: string, verified: boolean): MarketEnt
  *
  * 作者只写包名；owner 来自收录地址（GitHub 仓库地址），拼成全局唯一的 `owner/name`。
  */
-export async function buildMarket(registry: Registry, options: BuildOptions = {}): Promise<BuildResult> {
+export async function buildMarket(sources: Source[], options: BuildOptions = {}): Promise<BuildResult> {
   const verified = options.verified ?? new Set<string>()
   const timeoutMs = options.timeoutMs ?? 15_000
   const failures: Failure[] = []
   const candidates: Candidate[] = []
 
-  for (const item of registry.sources) {
-    const source = item.package
-    const owner = ownerFromSource(source, item.owner)
+  for (const item of sources) {
+    const source = item.url
+    const owner = ownerFromSource(item.url, item.owner)
     if (!owner) {
-      failures.push({ source, reason: '看不出 owner：收录地址要指向 GitHub 仓库（或在该条里写 owner）' })
+      failures.push({ source, reason: '看不出 owner：收录地址要是 GitHub 仓库里的文件链接' })
       continue
     }
     try {
-      const raw = await readJson(source, timeoutMs)
+      const raw = await readJson(item.fetchUrl, timeoutMs)
       const { errors, manifest } = validateManifest(raw)
       if (!manifest) {
         failures.push({ source, reason: errors.join('；') })

@@ -3,7 +3,7 @@ name: Market
 on:
   push:
     branches: [main]
-    paths: ['registry.json', 'verified.json', 'src/**', 'schemas/**', 'package.json']
+    paths: ['registry.jsonl', 'verified.json', 'src/**', 'schemas/**', 'package.json']
   schedule:
     # 每天 03:00 UTC 重建一次，兜住作者仓库的日常更新
     - cron: '0 3 * * *'
@@ -29,7 +29,7 @@ jobs:
       - run: npm run check
       - run: npm test
       - name: 构建市场索引
-        run: node lib/index.js build --registry registry.json --out dist/market.json --report dist/report.md
+        run: node lib/index.js build --registry registry.jsonl --out dist/market.json --report dist/report.md
       - name: 跳过清单打到日志和 job summary
         if: always()
         run: |

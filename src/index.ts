@@ -2,8 +2,8 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { buildMarket } from './build.js'
+import { parseRegistry } from './registry.js'
 import { renderReport } from './report.js'
-import type { Registry } from './types.js'
 
 const arg = (name: string, fallback: string): string => {
   const i = process.argv.indexOf(name)
@@ -25,27 +25,32 @@ async function readJsonIfExists(path: string): Promise<unknown | null> {
 async function main(): Promise<number> {
   const command = process.argv[2]
   if (command !== 'build') {
-    console.error('用法：node lib/index.js build [--registry registry.json] [--out dist/market.json] [--report dist/report.md] [--verified verified.json] [--strict]')
+    console.error('用法：node lib/index.js build [--registry registry.jsonl] [--out dist/market.json] [--report dist/report.md] [--verified verified.json] [--strict]')
     return 2
   }
 
-  const registryPath = resolve(arg('--registry', 'registry.json'))
+  const registryPath = resolve(arg('--registry', 'registry.jsonl'))
   const outPath = resolve(arg('--out', 'dist/market.json'))
   const reportPath = resolve(arg('--report', 'dist/report.md'))
   const verifiedPath = resolve(arg('--verified', 'verified.json'))
 
-  const registry = (await readJsonIfExists(registryPath)) as Registry | null
-  if (!registry || !Array.isArray(registry.sources)) {
-    console.error(`${registryPath} 读不出来，或者没有 sources 数组`)
+  let registryText: string
+  try {
+    registryText = await readFile(registryPath, 'utf8')
+  } catch {
+    console.error(`${registryPath} 读不出来`)
     return 2
   }
+  const { sources, errors } = parseRegistry(registryText)
+  for (const error of errors) console.warn(`! 收录表：${error}`)
+  if (!sources.length) console.warn(`! 收录表是空的（一行一个 GitHub 文件链接）`)
 
   const verifiedRaw = (await readJsonIfExists(verifiedPath)) as unknown
   const verified = new Set<string>(
     Array.isArray(verifiedRaw) ? verifiedRaw.filter((id): id is string => typeof id === 'string') : [],
   )
 
-  const result = await buildMarket(registry, { verified })
+  const result = await buildMarket(sources, { verified })
 
   await mkdir(dirname(outPath), { recursive: true })
   await writeFile(outPath, JSON.stringify(result.index, null, 2) + '\n')

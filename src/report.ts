@@ -31,7 +31,7 @@ export function renderReport(result: BuildResult): string {
 
   lines.push('## 已收录', '', '| id | 版本 | 分类 | 审核 |', '| --- | --- | --- | --- |')
   for (const entry of index.entries) {
-    const mark = entry.revoked ? '已撤回' : entry.verified ? '已审核' : '未审核'
+    const mark = entry.verified ? '已审核' : '未审核'
     lines.push(`| ${cell(entry.id)} | ${cell(entry.version)} | ${entry.category} | ${mark} |`)
   }
   lines.push('')

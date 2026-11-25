@@ -44,15 +44,7 @@
             }
           },
           "source": { "type": "string" },
-          "verified": { "type": "boolean" },
-          "revoked": {
-            "type": "object",
-            "required": ["versions", "reason"],
-            "properties": {
-              "versions": { "type": "array", "items": { "type": "string" } },
-              "reason": { "type": "string" }
-            }
-          }
+          "verified": { "type": "boolean" }
         }
       }
     }

@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises'
-import { DEFAULT_PANEL, parseId, validateManifest } from './validate.js'
-import type { MarketEntry, MarketIndex, PackageManifest, Registry, RevokedEntry } from './types.js'
+import { DEFAULT_PANEL, ownerFromSource, qualify, validateManifest } from './validate.js'
+import type { MarketEntry, MarketIndex, PackageManifest, Registry } from './types.js'
 
 export interface Failure {
   source: string
@@ -11,8 +11,6 @@ export interface Failure {
 export interface BuildOptions {
   /** 已审核的 id，命中的条目标 verified: true */
   verified?: Set<string>
-  /** 撤回表：命中的条目带上 revoked 说明 */
-  revoked?: RevokedEntry[]
   /** 单条请求超时，默认 15 秒 */
   timeoutMs?: number
 }
@@ -53,9 +51,8 @@ interface Candidate {
   source: string
 }
 
-function toEntry(candidate: Candidate, id: string, verified: boolean, revoked: RevokedEntry[]): MarketEntry {
+function toEntry(candidate: Candidate, id: string, verified: boolean): MarketEntry {
   const { manifest, owner, name, source } = candidate
-  const hit = revoked.find((item) => item.id === id && item.versions.includes(manifest.version))
   return {
     id,
     owner,
@@ -75,23 +72,28 @@ function toEntry(candidate: Candidate, id: string, verified: boolean, revoked: R
     artifact: manifest.aurabot.artifact,
     source,
     verified,
-    ...(hit ? { revoked: { versions: hit.versions, reason: hit.reason } } : {}),
   }
 }
 
 /**
  * 拉取 registry 里的每个 package.json，校验后合成市场索引。
  * 清单不合法只记进 failures 并跳过这一条，不影响其它条目，也不让整次构建失败。
+ *
+ * 作者只写包名；owner 来自收录地址（GitHub 仓库地址），拼成全局唯一的 `owner/name`。
  */
 export async function buildMarket(registry: Registry, options: BuildOptions = {}): Promise<BuildResult> {
   const verified = options.verified ?? new Set<string>()
-  const revoked = options.revoked ?? []
   const timeoutMs = options.timeoutMs ?? 15_000
   const failures: Failure[] = []
   const candidates: Candidate[] = []
 
   for (const item of registry.sources) {
     const source = item.package
+    const owner = ownerFromSource(source, item.owner)
+    if (!owner) {
+      failures.push({ source, reason: '看不出 owner：收录地址要指向 GitHub 仓库（或在该条里写 owner）' })
+      continue
+    }
     try {
       const raw = await readJson(source, timeoutMs)
       const { errors, manifest } = validateManifest(raw)
@@ -99,12 +101,7 @@ export async function buildMarket(registry: Registry, options: BuildOptions = {}
         failures.push({ source, reason: errors.join('；') })
         continue
       }
-      const parsed = parseId(manifest.name)
-      if (!parsed) {
-        failures.push({ source, id: manifest.name, reason: '包名不是 scope/name' })
-        continue
-      }
-      candidates.push({ id: `${parsed.owner}/${parsed.name}`, owner: parsed.owner, name: parsed.name, manifest, source })
+      candidates.push({ id: qualify(owner, manifest.name), owner, name: manifest.name, manifest, source })
     } catch (error) {
       failures.push({ source, reason: (error as Error).message })
     }
@@ -123,9 +120,9 @@ export async function buildMarket(registry: Registry, options: BuildOptions = {}
   for (const [id, group] of grouped) {
     group.sort((a, b) => a.owner.localeCompare(b.owner) || a.source.localeCompare(b.source))
     group.forEach((candidate, index) => {
-      const finalId = index === 0 ? id : `${candidate.owner}/${candidate.name}-${index + 1}`
+      const finalId = index === 0 ? id : `${candidate.id}-${index + 1}`
       if (finalId !== id) renamed.push({ from: id, to: finalId })
-      entries.push(toEntry(candidate, finalId, verified.has(finalId) || verified.has(id), revoked))
+      entries.push(toEntry(candidate, finalId, verified.has(finalId) || verified.has(id)))
     })
   }
 
@@ -136,4 +133,3 @@ export async function buildMarket(registry: Registry, options: BuildOptions = {}
     renamed,
   }
 }
-

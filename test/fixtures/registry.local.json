@@ -1,1 +1,1 @@
-{"schema":1,"sources":[{"package":"test/fixtures/good.json"},{"package":"test/fixtures/bad-category.json"},{"package":"test/fixtures/nope.json"}]}
+{"schema":1,"sources":[{"package":"test/fixtures/good.json","owner":"shangxueink"},{"package":"test/fixtures/bad-category.json","owner":"shangxueink"},{"package":"test/fixtures/nope.json","owner":"shangxueink"}]}

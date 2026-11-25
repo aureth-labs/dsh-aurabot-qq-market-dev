@@ -22,7 +22,7 @@ export interface Artifact {
 export interface AurabotManifest {
   /** 市场里显示的名字；和包名解耦，允许重名 */
   displayName?: string
-  /** 面板文件，相对模块根目录；缺省 ./client/panel.js */
+  /** 面板文件，相对模块根目录；缺省 ./dist/panel.js */
   panel?: string
   category: Category
   capabilities: Capability[]
@@ -40,7 +40,7 @@ export interface AurabotManifest {
 
 /** 作者仓库里的 package.json，只列我们关心的字段。 */
 export interface PackageManifest {
-  /** `scope/name`：scope 是 GitHub 用户名或组织名（小写），不带 @ */
+  /** 包名本身，不带用户名前缀：市场构建时用来源仓库的 owner 拼成 `owner/name` */
   name: string
   version: string
   main?: string
@@ -56,6 +56,8 @@ export interface RegistrySource {
   package: string
   /** 可选备注，方便维护者记账 */
   note?: string
+  /** 可选：来源地址里看不出 owner 时（本地文件、自建域名）在这里写明 */
+  owner?: string
 }
 
 export interface Registry {
@@ -87,15 +89,6 @@ export interface MarketEntry {
   source: string
   /** 是否经过审核。自动收录一律 false */
   verified: boolean
-  /** 被撤回的版本（供应链事故时用），没撤回就不写 */
-  revoked?: { versions: string[]; reason: string }
-}
-
-/** revoked.json 的一条：哪些版本、为什么撤回 */
-export interface RevokedEntry {
-  id: string
-  versions: string[]
-  reason: string
 }
 
 export interface MarketIndex {

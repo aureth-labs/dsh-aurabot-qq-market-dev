@@ -4,8 +4,9 @@
 
 ## 一句话
 
-插件 = 一个 GitHub 仓库里的 `modules/<名字>/`，用 TypeScript 写，构建成 `lib/` 下的 JS，
-由仓库自己的 GitHub Actions 打成 zip 发 Release，再把 zip 地址回写到 `package.json`。
+插件 = 一个 GitHub 仓库里的 `modules/<名字>/`，前后端都用 TypeScript 写：
+后台编译到 `lib/`，面板编译到 `dist/`。由仓库自己的 GitHub Actions 打成 zip 发 Release，
+再把 zip 地址回写到 `package.json`。
 
 ## 仓库结构
 
@@ -15,9 +16,10 @@ repo/
 ├─ scripts/build.mjs               # 模板自带，检测变更 + 打包 + 回写 artifact
 └─ modules/<name>/
    ├─ package.json                 # 唯一清单（name/version/aurabot 段）
-   ├─ tsconfig.json                # NodeNext，outDir=lib，rootDir=src
+   ├─ tsconfig.json                # 后台：NodeNext，outDir=lib，rootDir=src
+   ├─ tsconfig.client.json         # 面板：outDir=dist，rootDir=client
    ├─ src/index.ts                 # 入口，默认导出插件对象
-   ├─ client/panel.js              # 可选面板（默认路径）
+   ├─ client/panel.ts              # 可选面板源码（编译成 dist/panel.js）
    ├─ README.md
    ├─ LICENSE
    └─ test/*.test.mjs              # 不进发布包
@@ -29,7 +31,7 @@ repo/
 
 ```json
 {
-  "name": "你的GitHub用户名/模块名",
+  "name": "模块名",
   "version": "1.0.0",
   "type": "module",
   "main": "lib/index.js",
@@ -38,7 +40,7 @@ repo/
   "author": "你的名字",
   "aurabot": {
     "displayName": "市场显示名",
-    "panel": "./client/panel.js",
+    "panel": "./dist/panel.js",
     "category": "social",
     "capabilities": ["network"],
     "minPluginVersion": "1.2.0",
@@ -51,17 +53,19 @@ repo/
 
 规则：
 
-- `name` 是 `scope/name`，**不带 @**；scope 必须是小写 GitHub 用户名/组织名
+- `name` 只写包名本身（小写字母/数字/`-`），**不要加用户名前缀、不要带 @**；市场构建时用仓库 owner 拼成 `owner/name`
 - `type` 必须是 `module`（只支持 ESM，不支持 CJS）
 - `category` 单选：platform / social / creative / desktop / manage / tool
 - `capabilities` 如实声明：network / filesystem / process / dynamic-code / plugin-config / plugin-internals
 - **没有 tags 字段**，搜索走 description
-- `panel` 缺省 `./client/panel.js`，必须是 `./` 开头的相对路径、以 `.js` 结尾
+- `panel` 缺省 `./dist/panel.js`，必须是 `./` 开头的相对路径、以 `.js` 结尾
 - `artifact` 由 CI 回写，不要手改
 
 ## 构建
 
-- 源码只写 `src/**/*.ts`，产物只放 `lib/`
+- 后台源码只写 `src/**/*.ts`，产物放 `lib/`
+- 面板源码只写 `client/**/*.ts`，产物放 `dist/`；面板文件必须是 `export default function Panel(props) {...}`，
+  `React` / `h` / `ui` / `call` 由宿主注入，用 `declare const` 声明，不要 import
 - 不允许运行时依赖 `node_modules`：第三方库必须 bundle 进产物（esbuild `bundle: true`）
 - 打不进单文件的（wasm / 原生模块）走「首次运行下载固定版本」，并在 README 写明地址和 sha256
 - TS 配置：`module: NodeNext`、`target: ES2022`、`strict: true`、`removeComments: true`

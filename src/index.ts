@@ -3,7 +3,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { buildMarket } from './build.js'
 import { renderReport } from './report.js'
-import type { Registry, RevokedEntry } from './types.js'
+import type { Registry } from './types.js'
 
 const arg = (name: string, fallback: string): string => {
   const i = process.argv.indexOf(name)
@@ -25,7 +25,7 @@ async function readJsonIfExists(path: string): Promise<unknown | null> {
 async function main(): Promise<number> {
   const command = process.argv[2]
   if (command !== 'build') {
-    console.error('用法：node lib/index.js build [--registry registry.json] [--out dist/market.json] [--report dist/report.md] [--verified verified.json] [--revoked revoked.json] [--strict]')
+    console.error('用法：node lib/index.js build [--registry registry.json] [--out dist/market.json] [--report dist/report.md] [--verified verified.json] [--strict]')
     return 2
   }
 
@@ -33,7 +33,6 @@ async function main(): Promise<number> {
   const outPath = resolve(arg('--out', 'dist/market.json'))
   const reportPath = resolve(arg('--report', 'dist/report.md'))
   const verifiedPath = resolve(arg('--verified', 'verified.json'))
-  const revokedPath = resolve(arg('--revoked', 'revoked.json'))
 
   const registry = (await readJsonIfExists(registryPath)) as Registry | null
   if (!registry || !Array.isArray(registry.sources)) {
@@ -46,10 +45,7 @@ async function main(): Promise<number> {
     Array.isArray(verifiedRaw) ? verifiedRaw.filter((id): id is string => typeof id === 'string') : [],
   )
 
-  const revokedRaw = (await readJsonIfExists(revokedPath)) as unknown
-  const revoked = (Array.isArray(revokedRaw) ? revokedRaw : []) as RevokedEntry[]
-
-  const result = await buildMarket(registry, { verified, revoked })
+  const result = await buildMarket(registry, { verified })
 
   await mkdir(dirname(outPath), { recursive: true })
   await writeFile(outPath, JSON.stringify(result.index, null, 2) + '\n')

@@ -18,7 +18,12 @@
             "type": "string",
             "description": "作者仓库里 package.json 的直链（raw.githubusercontent.com 或 jsDelivr）"
           },
-          "note": { "type": "string", "description": "维护者备注，不参与构建" }
+          "note": { "type": "string", "description": "维护者备注，不参与构建" },
+          "owner": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,38}$",
+            "description": "可选。只在地址里看不出 GitHub owner 时（本地文件、自建域名）才填"
+          }
         }
       }
     }

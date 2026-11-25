@@ -1,13 +1,18 @@
 import { CAPABILITIES, CATEGORIES, type PackageManifest } from './types.js'
 
-/** 包名必须是 scope/name（不带 @），只允许小写字母、数字、- */
-const NAME_RE = /^([a-z0-9][a-z0-9-]{0,38})\/([a-z0-9][a-z0-9-]{0,38})$/
-const SEMVER_RE = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?$/
-const SHA256_RE = /^[0-9a-f]{64}$/
+/** 包名本身：小写字母 / 数字 / -，不带 @，也不带用户名前缀 */
+const NAME_RE = /^[a-z0-9][a-z0-9-]{0,39}$/
+/** 依赖里的完整 id：owner/name */
+const QUALIFIED_RE = /^([a-z0-9][a-z0-9-]{0,38})\/([a-z0-9][a-z0-9-]{0,38})$/
 /** 内置模块 id 没有 owner 前缀，允许平铺 */
 const BUILTIN_ID_RE = /^[a-z][a-z0-9-]{1,39}$/
+const OWNER_RE = /^[a-z0-9][a-z0-9-]{0,38}$/
+const SEMVER_RE = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?$/
+const SHA256_RE = /^[0-9a-f]{64}$/
 const PANEL_RE = /^\.\/[A-Za-z0-9._/-]+\.js$/
-export const DEFAULT_PANEL = './client/panel.js'
+
+/** 面板缺省路径：前端源码在 client/，编译产物落在 dist/ */
+export const DEFAULT_PANEL = './dist/panel.js'
 
 export interface ValidationResult {
   errors: string[]
@@ -18,8 +23,34 @@ export interface ValidationResult {
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v)
 
-export function parseId(name: string): { owner: string; name: string } | null {
-  const m = NAME_RE.exec(name)
+/** 拼出市场里的全局唯一 id。作者只写包名，owner 由市场补。 */
+export function qualify(owner: string, name: string): string {
+  return `${owner}/${name}`
+}
+
+/**
+ * 从收录地址里取 GitHub owner：作者不需要在 package.json 里写自己是谁，
+ * 仓库地址本身就是身份。取不到就返回 null，由调用方记一条跳过。
+ */
+export function ownerFromSource(source: string, override?: string): string | null {
+  const raw = (override ?? '').trim().toLowerCase()
+  if (raw) return OWNER_RE.test(raw) ? raw : null
+
+  const patterns = [
+    /^https?:\/\/raw\.githubusercontent\.com\/([^/]+)\//i,
+    /^https?:\/\/github\.com\/([^/]+)\/[^/]+\/(?:raw|blob)\//i,
+    /^https?:\/\/(?:cdn\.)?jsdelivr\.net\/gh\/([^/]+)\//i,
+  ]
+  for (const pattern of patterns) {
+    const found = pattern.exec(source)
+    const owner = found?.[1]?.toLowerCase()
+    if (owner && OWNER_RE.test(owner)) return owner
+  }
+  return null
+}
+
+export function parseQualifiedId(id: string): { owner: string; name: string } | null {
+  const m = QUALIFIED_RE.exec(id)
   return m && m[1] && m[2] ? { owner: m[1], name: m[2] } : null
 }
 
@@ -30,7 +61,9 @@ export function validateManifest(raw: unknown): ValidationResult {
 
   const name = raw.name
   if (typeof name !== 'string') errors.push('缺 name')
-  else if (!NAME_RE.test(name)) errors.push(`name「${name}」要写成 scope/name（不带 @），scope 是你的 GitHub 用户名或组织名`)
+  else if (!NAME_RE.test(name)) {
+    errors.push(`name「${name}」只写包名本身（小写字母/数字/-），不要加用户名前缀、不要带 @`)
+  }
 
   const version = raw.version
   if (typeof version !== 'string') errors.push('缺 version')
@@ -82,7 +115,7 @@ export function validateManifest(raw: unknown): ValidationResult {
     if (!Array.isArray(requires)) errors.push('aurabot.requires 要是数组')
     else {
       for (const id of requires) {
-        if (typeof id !== 'string' || !(NAME_RE.test(id) || BUILTIN_ID_RE.test(id))) {
+        if (typeof id !== 'string' || !(QUALIFIED_RE.test(id) || BUILTIN_ID_RE.test(id))) {
           errors.push(`aurabot.requires 里的「${String(id)}」既不是 owner/name，也不是合法的内置模块 id`)
         }
       }

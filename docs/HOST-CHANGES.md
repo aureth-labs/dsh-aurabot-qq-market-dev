@@ -28,8 +28,8 @@
 
 | module.json | package.json | 说明 |
 | --- | --- | --- |
-| `id` | `name` 的 `name` 部分 | `scope/name` → `name` |
-| — | `name` 的 `scope` 部分 | 新字段，展示来源 |
+| `id` | `name` | `owner/name` → 平铺名（`owner` 在 market.json 里单独给） |
+| — | `owner` | 新字段，来自收录地址，展示来源 |
 | `name` | `aurabot.displayName`（回落包名） | |
 | `version` | `version` | |
 | `description` | `description` | |
@@ -39,7 +39,7 @@
 | `minPluginVersion` | `aurabot.minPluginVersion` | |
 | `api` | `aurabot.api` | |
 | `requires` | `aurabot.requires` | |
-| `panel` | `aurabot.panel`（缺省 `./client/panel.js`） | 相对模块根目录 |
+| `panel` | `aurabot.panel`（缺省 `./dist/panel.js`） | 相对模块根目录 |
 | `build.out` | 不再需要 | 构建在作者仓库完成 |
 
 ## 2. 入口解析
@@ -55,15 +55,16 @@
 
 **验收**：入口叫 `main.js`、`dist/entry.js` 都能加载；没有 `index.mjs` 也能跑。
 
-## 3. id：平铺 → `scope/name`（不带 @）
+## 3. id：作者写平铺名，市场补 owner
 
 | | 现在 | 目标 |
 | --- | --- | --- |
-| 对外 id | `playmusic`（= 文件夹名） | `shangxueink/playmusic`（不带 `@`） |
+| `package.json.name` | `playmusic` | `playmusic`（作者**不**写前缀） |
+| 对外 id | `playmusic`（= 文件夹名） | `shangxueink/playmusic`（市场按 `entry.owner` + `name` 拼） |
 | 同名不同作者 | 冲突 | 共存 |
 | 安装目录 | `modules/<id>/` | `modules/<scope>/<name>/` |
 
-- [ ] id 一律按 `scope/name` 解析，来源是 `package.json.name`
+- [ ] id 一律按 `owner/name` 解析，`owner` 取 `market.json` 条目的 `owner` 字段（作者没写进 package.json）
 - [ ] 配置文件里的键、面板路由、日志里的模块名都要跟着用 qualified id，否则重名会串
 - [ ] `requires` 解析：先查内置（无前缀），再查 `scope/name`
 - [ ] 老模块保持平铺 id 不变（它们没有 `/`，天然不冲突）
@@ -90,7 +91,6 @@
 - [ ] 版本比较用 semver（`1.10.0 > 1.9.0`），不要字符串比
 - [ ] `minPluginVersion` 不满足时，明确提示「需要插件 ≥ x.y.z」而不是装完报错
 - [ ] 更新检查只读 `market.json`，不直接访问作者仓库
-- [ ] 撤回（`revoked.json`）：已装用户强提示，未装用户不可装
 - [ ] 市场里消失的插件：保留已装副本，只是不再提示更新（**不等于卸载**）
 
 ## 6. 多源
@@ -113,7 +113,7 @@
 2. **升级时数据目录**：`data/<id>/` 是否随 id 变更迁移
 3. **老模块的 panel 回落**：`module.json.panel` 继续沿用，新格式统一读 `aurabot.panel`
 
-已定：只允许 ESM（`"type": "module"`，CJS 直接拒绝）；面板缺省 `./client/panel.js`；安装目录 `modules/<scope>/<name>/`。
+已定：只允许 ESM（`"type": "module"`，CJS 直接拒绝）；面板缺省 `./dist/panel.js`；安装目录 `modules/<scope>/<name>/`。
 
 ## 9. 明确不属于主框架的部分
 

@@ -8,8 +8,8 @@
   "properties": {
     "name": {
       "type": "string",
-      "pattern": "^[a-z0-9][a-z0-9-]{0,38}/[a-z0-9][a-z0-9-]{0,38}$",
-      "description": "scope/name，不带 @：scope 是你的 GitHub 用户名或组织名（小写）"
+      "pattern": "^[a-z0-9][a-z0-9-]{0,39}$",
+      "description": "只写包名本身（小写字母/数字/-），不要加用户名前缀、不要带 @；市场构建时用仓库 owner 拼成 owner/name"
     },
     "version": {
       "type": "string",
@@ -30,8 +30,8 @@
         "panel": {
           "type": "string",
           "pattern": "^\\./[A-Za-z0-9._/-]+\\.js$",
-          "default": "./client/panel.js",
-          "description": "面板文件，相对模块根目录"
+      "default": "./dist/panel.js",
+      "description": "面板文件，相对模块根目录；前端源码写 client/*.ts，编译到 dist/"
         },
         "category": {
           "enum": ["platform", "social", "creative", "desktop", "manage", "tool"],

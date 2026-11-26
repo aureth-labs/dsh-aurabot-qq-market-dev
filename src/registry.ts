@@ -20,7 +20,18 @@ export function parseRegistry(text: string): RegistryParse {
     if (!line || line.startsWith('#')) return
 
     let url = line
-    if (line.startsWith('"')) {
+    let owner: string | undefined
+    if (line.startsWith('{')) {
+      try {
+        const row = JSON.parse(line)
+        if (typeof row.url !== 'string' || typeof row.owner !== 'string' || !/^[a-z0-9][a-z0-9-]{0,38}$/.test(row.owner)) throw Error()
+        url = row.url
+        owner = row.owner
+      } catch {
+        errors.push('第 ' + (index + 1) + ' 行需要 url 和有效的 owner')
+        return
+      }
+    } else if (line.startsWith('"')) {
       try {
         url = JSON.parse(line) as string
       } catch {
@@ -35,7 +46,7 @@ export function parseRegistry(text: string): RegistryParse {
     const value = url.trim()
     if (seen.has(value)) return
     seen.add(value)
-    sources.push({ url: value })
+    sources.push(owner ? { url: value, owner } : { url: value })
   })
 
   return { sources, errors }

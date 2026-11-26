@@ -58,3 +58,14 @@ verified.json          已审核的 id 列表
 - [x] 市场仓库自己的 GitHub Actions：构建索引后同时发 Pages、固定 tag 的 Release、`market` 分支
 - [x] Pages 插件市场前端页（`index.html`）：卡片全部服务端渲染，JS 只加翻页、每行列数、右下角操作菜单；页内还带一份构建报告（跳过/改名的清单）
 
+
+## 验收本地发行包
+
+在社区仓库运行 `npm run dry-run`。该命令生成 ZIP 和预览收录表，可通过 AURABOT_PREVIEW_OWNER 指定本地作者命名空间。在市场仓库运行以下命令。
+
+```sh
+npm run build
+node lib/index.js build --registry ../dsh-aurabot-qq-mods/dist/registry.jsonl --artifact-dir ../dsh-aurabot-qq-mods/dist --out dist/preview/market.json --report dist/preview/report.md --strict
+```
+
+构建器按清单核对 ZIP 的实际大小和 SHA-256，将文件写入索引旁的 artifacts/。宿主优先从同一镜像读取 ZIP，镜像不可达时可访问原始发行地址。预览清单使用本地工件。正式 CI 从作者的 Release 下载。

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
+import { mirrorArtifacts } from './artifacts.js'
 import { buildMarket } from './build.js'
 import { parseRegistry } from './registry.js'
 import { renderLanding } from './landing.js'
@@ -26,7 +27,7 @@ async function readJsonIfExists(path: string): Promise<unknown | null> {
 async function main(): Promise<number> {
   const command = process.argv[2]
   if (command !== 'build') {
-    console.error('用法：node lib/index.js build [--registry registry.jsonl] [--out dist/market.json] [--report dist/report.md] [--verified verified.json] [--strict]')
+    console.error('用法：node lib/index.js build [--registry registry.jsonl] [--out dist/market.json] [--report dist/report.md] [--verified verified.json] [--artifact-dir dist-of-author] [--strict]')
     return 2
   }
 
@@ -53,6 +54,8 @@ async function main(): Promise<number> {
 
   const result = await buildMarket(sources, { verified })
 
+  await mirrorArtifacts(result,dirname(outPath),arg('--artifact-dir','') || undefined)
+
   await mkdir(dirname(outPath), { recursive: true })
   await writeFile(outPath, JSON.stringify(result.index, null, 2) + '\n')
   await mkdir(dirname(reportPath), { recursive: true })
@@ -70,7 +73,7 @@ async function main(): Promise<number> {
   console.log(`落地页：${landingPath}`)
 
   // 默认只当警告：单个作者写错清单不该卡住整条流水线。需要严格模式时加 --strict。
-  if (result.failures.length && flag('--strict')) return 1
+  if ((result.failures.length || errors.length) && flag('--strict')) return 1
   return 0
 }
 

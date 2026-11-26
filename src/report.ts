@@ -10,7 +10,7 @@ export function renderReport(result: BuildResult): string {
     '',
     `- 生成时间：${index.generatedAt}`,
     `- 收录成功：${index.entries.length}`,
-    `- 跳过（清单不合法）：${failures.length}`,
+    `- 跳过（清单或发行包无效）：${failures.length}`,
     `- 重命名（id 冲突）：${renamed.length}`,
     '',
   ]

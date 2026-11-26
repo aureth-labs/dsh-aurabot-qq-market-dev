@@ -10,6 +10,7 @@ export type Capability = (typeof CAPABILITIES)[number]
 
 /** 构建产物：作者仓库 Release 里的 zip。 */
 export interface Artifact {
+  mirror?: string
   /** https 直链 */
   url: string
   /** 小写十六进制 sha256 */

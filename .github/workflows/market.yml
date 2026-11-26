@@ -162,8 +162,9 @@ jobs:
           fi
           mkdir -p .market
           cp dist/market.json dist/report.md dist/index.html .market/
+          rsync -a --delete dist/artifacts/ .market/artifacts/
           cd .market
-          git add market.json report.md index.html
+          git add -A -- .
           if git diff --cached --quiet; then
             echo "索引没有变化"
             exit 0

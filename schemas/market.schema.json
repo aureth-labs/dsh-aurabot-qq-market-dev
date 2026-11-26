@@ -40,6 +40,7 @@
             "required": ["url", "sha256", "size"],
             "properties": {
               "url": { "type": "string" },
+              "mirror": { "type": "string", "pattern": "^artifacts/[a-f0-9]{64}\\.zip$" },
               "sha256": { "type": "string" },
               "size": { "type": "integer" }
             }

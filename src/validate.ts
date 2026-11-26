@@ -122,9 +122,10 @@ export function validateManifest(raw: unknown): ValidationResult {
     }
   }
 
+  if (aurabot.kind !== undefined && aurabot.kind !== 'adapter' && aurabot.kind !== 'plugin') errors.push('aurabot.kind 需要是 adapter 或 plugin')
   const platforms = aurabot.platforms
   if (platforms !== undefined) {
-    if (!Array.isArray(platforms) || platforms.length === 0) errors.push('aurabot.platforms 要是非空数组；不写表示只支持 qq')
+    if (!Array.isArray(platforms) || platforms.length === 0) errors.push('aurabot.platforms 要是非空数组')
     else if (platforms.includes('*') && platforms.length !== 1) errors.push('aurabot.platforms 里的 "*" 只能单独使用')
   }
 

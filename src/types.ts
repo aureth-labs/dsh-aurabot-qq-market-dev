@@ -32,7 +32,8 @@ export interface AurabotManifest {
   api: number
   /** 依赖的模块 id：`owner/name` 或内置模块 id */
   requires?: string[]
-  /** 支持的平台；缺省 = 只支持 qq */
+  kind?: 'plugin' | 'adapter'
+  /** V2 缺省适配全部平台。 */
   platforms?: string[]
   /** 最近一次构建的产物 */
   artifact: Artifact
@@ -71,6 +72,7 @@ export interface MarketEntry {
   panel: string
   category: Category
   capabilities: Capability[]
+  kind: 'plugin' | 'adapter'
   platforms: string[]
   requires: string[]
   minPluginVersion: string

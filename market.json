@@ -1,12 +1,12 @@
 {
   "schema": 2,
-  "generatedAt": "2026-11-28T18:12:59.013Z",
+  "generatedAt": "2026-11-28T18:37:07.033Z",
   "entries": [
     {
       "id": "aureth-labs/auto-reply",
       "owner": "aureth-labs",
       "name": "auto-reply",
-      "version": "2.0.0-beta.6",
+      "version": "2.0.0-beta.7",
       "displayName": "关键词自动回复",
       "description": "关键词自动回复。可用自然语言生成规则、搜索和编辑规则表。",
       "panel": "./dist/panel.js",
@@ -24,19 +24,47 @@
       "license": "MIT",
       "author": "shangxueink",
       "artifact": {
-        "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/auto-reply-v2.0.0-beta.6/auto-reply-v2.0.0-beta.6.zip",
-        "sha256": "786db2ab8e6d33740691f0165154a1e7aabbaad11e191c369b90b413b642efb8",
+        "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/auto-reply-v2.0.0-beta.7/auto-reply-v2.0.0-beta.7.zip",
+        "sha256": "5d8ca4cef0e6e55e31a048ed5558e7ee2350470f3c2418d4378da91b89238b1c",
         "size": 8712,
-        "mirror": "artifacts/786db2ab8e6d33740691f0165154a1e7aabbaad11e191c369b90b413b642efb8.zip"
+        "mirror": "artifacts/5d8ca4cef0e6e55e31a048ed5558e7ee2350470f3c2418d4378da91b89238b1c.zip"
       },
       "source": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/blob/main/modules/auto-reply/package.json",
+      "verified": false
+    },
+    {
+      "id": "aureth-labs/bv-parse",
+      "owner": "aureth-labs",
+      "name": "bv-parse",
+      "version": "2.0.0-beta.5",
+      "displayName": "BV 号解析",
+      "description": "解析 BV 号和 B 站分享短链，回复播放器链接。",
+      "panel": "./dist/panel.js",
+      "category": "tool",
+      "capabilities": [],
+      "kind": "plugin",
+      "platforms": [
+        "*"
+      ],
+      "requires": [],
+      "minPluginVersion": "2.0.0-beta.1",
+      "api": 2,
+      "license": "MIT",
+      "author": "shangxueink",
+      "artifact": {
+        "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/bv-parse-v2.0.0-beta.5/bv-parse-v2.0.0-beta.5.zip",
+        "sha256": "ef7a52a8c4e92d44855dedc4f525f92625c55ed5e4eea61c44c8e04c083235c7",
+        "size": 3524,
+        "mirror": "artifacts/ef7a52a8c4e92d44855dedc4f525f92625c55ed5e4eea61c44c8e04c083235c7.zip"
+      },
+      "source": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/blob/main/modules/bv-parse/package.json",
       "verified": false
     },
     {
       "id": "aureth-labs/hello",
       "owner": "aureth-labs",
       "name": "hello",
-      "version": "2.0.0-beta.3",
+      "version": "2.0.0-beta.4",
       "displayName": "打招呼",
       "description": "一个 hello 指令 + 一个 hello_echo 工具 + 一个 /info 路由。",
       "panel": "./dist/panel.js",
@@ -54,10 +82,10 @@
       "license": "MIT",
       "author": "shangxueink",
       "artifact": {
-        "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/hello-v2.0.0-beta.3/hello-v2.0.0-beta.3.zip",
-        "sha256": "f48f8590204c72ec21adb338a3bbb7367cc74decb7850edd2b8f19466c00928b",
-        "size": 3410,
-        "mirror": "artifacts/f48f8590204c72ec21adb338a3bbb7367cc74decb7850edd2b8f19466c00928b.zip"
+        "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/hello-v2.0.0-beta.4/hello-v2.0.0-beta.4.zip",
+        "sha256": "cc9ce119a83326576da3e620ae3917f8eb29de7bcc4fbd5229f28b94537b229b",
+        "size": 3409,
+        "mirror": "artifacts/cc9ce119a83326576da3e620ae3917f8eb29de7bcc4fbd5229f28b94537b229b.zip"
       },
       "source": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/blob/main/modules/hello/package.json",
       "verified": false
@@ -66,7 +94,7 @@
       "id": "aureth-labs/ping",
       "owner": "aureth-labs",
       "name": "ping",
-      "version": "2.0.0-beta.2",
+      "version": "2.0.0-beta.3",
       "displayName": "探活",
       "description": "发送 ping，机器人回复 pong。",
       "panel": "./dist/panel.js",
@@ -82,12 +110,170 @@
       "license": "MIT",
       "author": "shangxueink",
       "artifact": {
-        "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/ping-v2.0.0-beta.2/ping-v2.0.0-beta.2.zip",
-        "sha256": "9fe89aef32610fdba39062594f6ff3a428938bb5357fc50baa39195dc45302c2",
-        "size": 2000,
-        "mirror": "artifacts/9fe89aef32610fdba39062594f6ff3a428938bb5357fc50baa39195dc45302c2.zip"
+        "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/ping-v2.0.0-beta.3/ping-v2.0.0-beta.3.zip",
+        "sha256": "1e3995f5183bfe39aef183fef0e682e51e05f77589eb5570d39bf14b4b3fc437",
+        "size": 1849,
+        "mirror": "artifacts/1e3995f5183bfe39aef183fef0e682e51e05f77589eb5570d39bf14b4b3fc437.zip"
       },
       "source": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/blob/main/modules/ping/package.json",
+      "verified": false
+    },
+    {
+      "id": "shangxueink/bilibili",
+      "owner": "shangxueink",
+      "name": "bilibili",
+      "version": "2.0.0-beta.3",
+      "displayName": "哔哩哔哩",
+      "description": "浏览 B 站视频与分 P，用会话中的机器人分享公开视频和图像",
+      "panel": "./dist/panel.js",
+      "category": "social",
+      "capabilities": [
+        "network",
+        "filesystem",
+        "plugin-config"
+      ],
+      "kind": "plugin",
+      "platforms": [
+        "*"
+      ],
+      "requires": [],
+      "minPluginVersion": "2.0.0-beta.1",
+      "api": 2,
+      "license": "MIT",
+      "author": "",
+      "artifact": {
+        "url": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/releases/download/bilibili-v2.0.0-beta.3/bilibili-v2.0.0-beta.3.zip",
+        "sha256": "6a132bb297bd753d342aa9c725c717a7cdebc6f00b7e9bba4821a65d0d7fea5b",
+        "size": 22390,
+        "mirror": "artifacts/6a132bb297bd753d342aa9c725c717a7cdebc6f00b7e9bba4821a65d0d7fea5b.zip"
+      },
+      "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/bilibili/package.json",
+      "verified": false
+    },
+    {
+      "id": "shangxueink/model-switch",
+      "owner": "shangxueink",
+      "name": "model-switch",
+      "version": "2.0.0-beta.2",
+      "displayName": "指令切换模型",
+      "description": "主人通过聊天指令查看、切换或恢复当前会话的模型。",
+      "panel": "./dist/panel.js",
+      "category": "tool",
+      "capabilities": [
+        "plugin-config"
+      ],
+      "kind": "plugin",
+      "platforms": [
+        "*"
+      ],
+      "requires": [],
+      "minPluginVersion": "2.0.0-beta.20",
+      "api": 2,
+      "license": "MIT",
+      "author": "shangxueink",
+      "artifact": {
+        "url": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/releases/download/model-switch-v2.0.0-beta.2/model-switch-v2.0.0-beta.2.zip",
+        "sha256": "b6584885cbfcb84d1f9957b72a11f0dd3914316b3eef11ade412479c3f2122f6",
+        "size": 2829,
+        "mirror": "artifacts/b6584885cbfcb84d1f9957b72a11f0dd3914316b3eef11ade412479c3f2122f6.zip"
+      },
+      "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/model-switch/package.json",
+      "verified": false
+    },
+    {
+      "id": "shangxueink/playmusic",
+      "owner": "shangxueink",
+      "name": "playmusic",
+      "version": "2.0.0-beta.2",
+      "displayName": "语音点歌",
+      "description": "点歌：搜哔哩哔哩/网易云的原唱，按匹配度挑最优一首，下载后抽成 mp3 当语音条发到当前会话。不需要任何 Cookie",
+      "panel": "./dist/panel.js",
+      "category": "social",
+      "capabilities": [
+        "filesystem",
+        "network",
+        "process"
+      ],
+      "kind": "plugin",
+      "platforms": [
+        "*"
+      ],
+      "requires": [],
+      "minPluginVersion": "2.0.0-beta.16",
+      "api": 2,
+      "license": "MIT",
+      "author": "shangxueink",
+      "artifact": {
+        "url": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/releases/download/playmusic-v2.0.0-beta.2/playmusic-v2.0.0-beta.2.zip",
+        "sha256": "893a41617d50c868631186819d97c2ec4033f59d8bfbeb2b3c5e34a2551b927c",
+        "size": 19548,
+        "mirror": "artifacts/893a41617d50c868631186819d97c2ec4033f59d8bfbeb2b3c5e34a2551b927c.zip"
+      },
+      "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/playmusic/package.json",
+      "verified": false
+    },
+    {
+      "id": "shangxueink/qq-toolkit",
+      "owner": "shangxueink",
+      "name": "qq-toolkit",
+      "version": "2.0.0-beta.1",
+      "displayName": "QQ 工具箱",
+      "description": "QQ 专属工具：协议扩展接口、群管、资料修改、好友与加群申请",
+      "panel": "./dist/panel.js",
+      "category": "social",
+      "capabilities": [
+        "network",
+        "filesystem",
+        "plugin-config"
+      ],
+      "kind": "plugin",
+      "platforms": [
+        "qq"
+      ],
+      "requires": [],
+      "minPluginVersion": "2.0.0-beta.1",
+      "api": 2,
+      "license": "MIT",
+      "author": "",
+      "artifact": {
+        "url": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/releases/download/qq-toolkit-v2.0.0-beta.1/qq-toolkit-v2.0.0-beta.1.zip",
+        "sha256": "140d20441164f318fef2e306c895d80b61d59f80e129e7a2cf45eb8579624e6a",
+        "size": 27631,
+        "mirror": "artifacts/140d20441164f318fef2e306c895d80b61d59f80e129e7a2cf45eb8579624e6a.zip"
+      },
+      "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/qq-toolkit/package.json",
+      "verified": false
+    },
+    {
+      "id": "shangxueink/qzone",
+      "owner": "shangxueink",
+      "name": "qzone",
+      "version": "2.0.0-beta.3",
+      "displayName": "QQ 空间",
+      "description": "按 QQ 机器人账号写空间日记、回复评论并浏览好友动态",
+      "panel": "./dist/panel.js",
+      "category": "social",
+      "capabilities": [
+        "network",
+        "filesystem",
+        "plugin-config"
+      ],
+      "kind": "plugin",
+      "platforms": [
+        "qq"
+      ],
+      "requires": [],
+      "minPluginVersion": "2.0.0-beta.1",
+      "api": 2,
+      "license": "MIT",
+      "author": "",
+      "artifact": {
+        "url": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/releases/download/qzone-v2.0.0-beta.3/qzone-v2.0.0-beta.3.zip",
+        "sha256": "071c1ec3be59cf616822d8d7c37f42636d7053d1fc114abe3c2da05fa9b01dbf",
+        "size": 30695,
+        "mirror": "artifacts/071c1ec3be59cf616822d8d7c37f42636d7053d1fc114abe3c2da05fa9b01dbf.zip"
+      },
+      "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/qzone/package.json",
       "verified": false
     },
     {
@@ -121,6 +307,36 @@
         "mirror": "artifacts/b0003ce4b62b0f4a1283073c2e58b0ff96305701ac67dcafd0b4f6c6ef4f9907.zip"
       },
       "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/tell-owner/package.json",
+      "verified": false
+    },
+    {
+      "id": "shangxueink/webqq",
+      "owner": "shangxueink",
+      "name": "webqq",
+      "version": "2.0.0-beta.2",
+      "displayName": "WebQQ",
+      "description": "在控制台打开本机托管的 Stapxs QQ Lite，连接你的 OneBot 服务",
+      "panel": "./dist/panel.js",
+      "category": "platform",
+      "capabilities": [
+        "network"
+      ],
+      "kind": "plugin",
+      "platforms": [
+        "qq"
+      ],
+      "requires": [],
+      "minPluginVersion": "2.0.0-beta.16",
+      "api": 2,
+      "license": "AGPL-3.0-only",
+      "author": "",
+      "artifact": {
+        "url": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/releases/download/webqq-v2.0.0-beta.2/webqq-v2.0.0-beta.2.zip",
+        "sha256": "f5995bd54548205a9e2dca9e160da2b7f09e49955bb939950cb57aa4049f1054",
+        "size": 6067350,
+        "mirror": "artifacts/f5995bd54548205a9e2dca9e160da2b7f09e49955bb939950cb57aa4049f1054.zip"
+      },
+      "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/webqq/package.json",
       "verified": false
     }
   ]

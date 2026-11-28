@@ -1,7 +1,6 @@
 # AuraBot 插件市场收录表：一行一个 package.json 的 GitHub 链接
 # 以 # 开头的行是注释，空行会被忽略；重复的链接只收一次
-https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/tell-owner/package.json
-https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/playmusic/package.json
 https://github.com/shangxueink/dsh-aurabot-qq-mods/blob/v2/modules/qzone/package.json
 https://github.com/shangxueink/dsh-aurabot-qq-mods/blob/v2/modules/bilibili/package.json
 https://github.com/shangxueink/dsh-aurabot-qq-mods/blob/v2/modules/adapter-telegram/package.json
+https://github.com/shangxueink/dsh-aurabot-qq-mods/blob/v2/modules/qq-toolkit/package.json

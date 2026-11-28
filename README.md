@@ -14,7 +14,7 @@ AuraBot 插件市场的**索引与镜像构建**。
 npm install
 npm run build            # tsc → lib/
 npm run market           # registry.jsonl → dist/market.json + dist/report.md
-npm test                 # 15 条校验/构建用例
+npm test                 # 16 条校验/构建用例
 ```
 
 ## 插件市场镜像源

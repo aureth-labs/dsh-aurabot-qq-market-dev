@@ -6,7 +6,7 @@
     "category": "tool",
     "capabilities": ["network"],
     "minPluginVersion": "1.2.0",
-    "api": 1,
+    "api": 2,
     "artifact": {
       "url": "http://example.com/a.zip",
       "sha256": "abc",

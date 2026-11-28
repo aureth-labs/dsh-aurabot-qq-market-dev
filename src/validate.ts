@@ -108,7 +108,7 @@ export function validateManifest(raw: unknown): ValidationResult {
   }
 
   const api = aurabot.api
-  if (!Number.isInteger(api) || (api as number) < 1) errors.push('aurabot.api 要是正整数')
+  if (api !== 2) errors.push('aurabot.api 要是 2（只收 V2 插件）')
 
   const requires = aurabot.requires
   if (requires !== undefined) {

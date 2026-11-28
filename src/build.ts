@@ -73,7 +73,7 @@ function toEntry(candidate: Candidate, id: string, verified: boolean): MarketEnt
     category: manifest.aurabot.category,
     capabilities: manifest.aurabot.capabilities,
     kind: manifest.aurabot.kind ?? 'plugin',
-    platforms: manifest.aurabot.platforms ?? (manifest.aurabot.api >= 2 ? ['*'] : ['qq']),
+    platforms: manifest.aurabot.platforms ?? ['*'],
     requires: manifest.aurabot.requires ?? [],
     minPluginVersion: manifest.aurabot.minPluginVersion,
     api: manifest.aurabot.api,

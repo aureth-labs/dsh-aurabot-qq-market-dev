@@ -32,7 +32,7 @@
           "platforms": { "type": "array", "items": { "type": "string" } },
           "requires": { "type": "array", "items": { "type": "string" } },
           "minPluginVersion": { "type": "string" },
-          "api": { "type": "integer", "minimum": 1 },
+          "api": { "const": 2 },
           "license": { "type": "string" },
           "author": { "type": "string" },
           "artifact": {

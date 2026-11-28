@@ -6,7 +6,7 @@
     "category": "music",
     "capabilities": [],
     "minPluginVersion": "1.2.0",
-    "api": 1,
+    "api": 2,
     "artifact": {
       "url": "https://example.com/a.zip",
       "sha256": "58accc19cce65617be291c82a63bf6016cca9d3dde928fa3f7fd04f88cb8878c",

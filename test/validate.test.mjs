@@ -17,6 +17,14 @@ test('合法清单通过：name 只写包名本身', () => {
   assert.equal(result.manifest.aurabot.category, 'social')
 })
 
+test('只收 V2：api 不是 2 的清单被拒，未写 platforms 时按全平台收录', async () => {
+  const v1 = read('good.json')
+  v1.aurabot.api = 1
+  assert.ok(validateManifest(v1).errors.some((e) => e.includes('aurabot.api')))
+  const { index } = await buildMarket([source('good.json', 'someone')])
+  assert.deepEqual(index.entries[0].platforms, ['*'])
+})
+
 test('缺 aurabot 段直接报错', () => {
   const { errors } = validateManifest({ name: 'playmusic', version: '1.0.0', type: 'module' })
   assert.equal(errors.length, 1)

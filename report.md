@@ -1,6 +1,6 @@
 # 插件市场构建报告
 
-- 生成时间：2026-11-28T18:37:07.033Z
+- 生成时间：2026-11-28T18:40:21.337Z
 - 收录成功：11
 - 跳过（清单或发行包无效）：0
 - 重命名（id 冲突）：0
@@ -15,7 +15,7 @@
 | aureth-labs/ping | 2.0.0-beta.3 | tool | 未审核 |
 | shangxueink/bilibili | 2.0.0-beta.3 | social | 未审核 |
 | shangxueink/model-switch | 2.0.0-beta.2 | tool | 未审核 |
-| shangxueink/playmusic | 2.0.0-beta.2 | social | 未审核 |
+| shangxueink/playmusic | 2.0.0-beta.3 | social | 未审核 |
 | shangxueink/qq-toolkit | 2.0.0-beta.1 | social | 未审核 |
 | shangxueink/qzone | 2.0.0-beta.3 | social | 未审核 |
 | shangxueink/tell-owner | 2.0.0-beta.2 | social | 未审核 |

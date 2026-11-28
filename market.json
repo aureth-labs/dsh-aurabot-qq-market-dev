@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "generatedAt": "2026-11-28T18:37:07.033Z",
+  "generatedAt": "2026-11-28T18:40:21.337Z",
   "entries": [
     {
       "id": "aureth-labs/auto-reply",
@@ -184,7 +184,7 @@
       "id": "shangxueink/playmusic",
       "owner": "shangxueink",
       "name": "playmusic",
-      "version": "2.0.0-beta.2",
+      "version": "2.0.0-beta.3",
       "displayName": "语音点歌",
       "description": "点歌：搜哔哩哔哩/网易云的原唱，按匹配度挑最优一首，下载后抽成 mp3 当语音条发到当前会话。不需要任何 Cookie",
       "panel": "./dist/panel.js",
@@ -204,10 +204,10 @@
       "license": "MIT",
       "author": "shangxueink",
       "artifact": {
-        "url": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/releases/download/playmusic-v2.0.0-beta.2/playmusic-v2.0.0-beta.2.zip",
-        "sha256": "893a41617d50c868631186819d97c2ec4033f59d8bfbeb2b3c5e34a2551b927c",
-        "size": 19548,
-        "mirror": "artifacts/893a41617d50c868631186819d97c2ec4033f59d8bfbeb2b3c5e34a2551b927c.zip"
+        "url": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/releases/download/playmusic-v2.0.0-beta.3/playmusic-v2.0.0-beta.3.zip",
+        "sha256": "ae29ceb4cb0d1b4152769180c232f0fb4ae57c6cd90f0bc896fe2bfd6f8f915f",
+        "size": 19656,
+        "mirror": "artifacts/ae29ceb4cb0d1b4152769180c232f0fb4ae57c6cd90f0bc896fe2bfd6f8f915f.zip"
       },
       "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/playmusic/package.json",
       "verified": false

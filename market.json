@@ -1,7 +1,67 @@
 {
   "schema": 2,
-  "generatedAt": "2026-11-28T14:47:56.121Z",
+  "generatedAt": "2026-11-28T18:12:59.013Z",
   "entries": [
+    {
+      "id": "aureth-labs/auto-reply",
+      "owner": "aureth-labs",
+      "name": "auto-reply",
+      "version": "2.0.0-beta.6",
+      "displayName": "关键词自动回复",
+      "description": "关键词自动回复。可用自然语言生成规则、搜索和编辑规则表。",
+      "panel": "./dist/panel.js",
+      "category": "tool",
+      "capabilities": [
+        "plugin-config"
+      ],
+      "kind": "plugin",
+      "platforms": [
+        "*"
+      ],
+      "requires": [],
+      "minPluginVersion": "2.0.0-beta.18",
+      "api": 2,
+      "license": "MIT",
+      "author": "shangxueink",
+      "artifact": {
+        "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/auto-reply-v2.0.0-beta.6/auto-reply-v2.0.0-beta.6.zip",
+        "sha256": "786db2ab8e6d33740691f0165154a1e7aabbaad11e191c369b90b413b642efb8",
+        "size": 8712,
+        "mirror": "artifacts/786db2ab8e6d33740691f0165154a1e7aabbaad11e191c369b90b413b642efb8.zip"
+      },
+      "source": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/blob/main/modules/auto-reply/package.json",
+      "verified": false
+    },
+    {
+      "id": "aureth-labs/hello",
+      "owner": "aureth-labs",
+      "name": "hello",
+      "version": "2.0.0-beta.3",
+      "displayName": "打招呼",
+      "description": "一个 hello 指令 + 一个 hello_echo 工具 + 一个 /info 路由。",
+      "panel": "./dist/panel.js",
+      "category": "tool",
+      "capabilities": [
+        "plugin-config"
+      ],
+      "kind": "plugin",
+      "platforms": [
+        "*"
+      ],
+      "requires": [],
+      "minPluginVersion": "2.0.0-beta.1",
+      "api": 2,
+      "license": "MIT",
+      "author": "shangxueink",
+      "artifact": {
+        "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/hello-v2.0.0-beta.3/hello-v2.0.0-beta.3.zip",
+        "sha256": "f48f8590204c72ec21adb338a3bbb7367cc74decb7850edd2b8f19466c00928b",
+        "size": 3410,
+        "mirror": "artifacts/f48f8590204c72ec21adb338a3bbb7367cc74decb7850edd2b8f19466c00928b.zip"
+      },
+      "source": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/blob/main/modules/hello/package.json",
+      "verified": false
+    },
     {
       "id": "aureth-labs/ping",
       "owner": "aureth-labs",
@@ -22,12 +82,45 @@
       "license": "MIT",
       "author": "shangxueink",
       "artifact": {
-        "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/ping-v2.0.0-beta.1/ping-v2.0.0-beta.1.zip",
-        "sha256": "5ce8d3df921d4f611b14eb1a628ad9af92b49b9cb80bdaf29f05933f5564c74b",
-        "size": 3330,
-        "mirror": "artifacts/5ce8d3df921d4f611b14eb1a628ad9af92b49b9cb80bdaf29f05933f5564c74b.zip"
+        "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/ping-v2.0.0-beta.2/ping-v2.0.0-beta.2.zip",
+        "sha256": "9fe89aef32610fdba39062594f6ff3a428938bb5357fc50baa39195dc45302c2",
+        "size": 2000,
+        "mirror": "artifacts/9fe89aef32610fdba39062594f6ff3a428938bb5357fc50baa39195dc45302c2.zip"
       },
       "source": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/blob/main/modules/ping/package.json",
+      "verified": false
+    },
+    {
+      "id": "shangxueink/tell-owner",
+      "owner": "shangxueink",
+      "name": "tell-owner",
+      "version": "2.0.0-beta.2",
+      "displayName": "转告主人反馈",
+      "description": "群里/私聊有人托话，记成工单送达主人；主人处理完，机器人自己找对工单回群引用原消息告诉本人",
+      "panel": "./dist/panel.js",
+      "category": "social",
+      "capabilities": [
+        "plugin-config",
+        "filesystem",
+        "network",
+        "plugin-internals"
+      ],
+      "kind": "plugin",
+      "platforms": [
+        "*"
+      ],
+      "requires": [],
+      "minPluginVersion": "2.0.0-beta.16",
+      "api": 2,
+      "license": "MIT",
+      "author": "shangxueink",
+      "artifact": {
+        "url": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/releases/download/tell-owner-v2.0.0-beta.2/tell-owner-v2.0.0-beta.2.zip",
+        "sha256": "b0003ce4b62b0f4a1283073c2e58b0ff96305701ac67dcafd0b4f6c6ef4f9907",
+        "size": 11726,
+        "mirror": "artifacts/b0003ce4b62b0f4a1283073c2e58b0ff96305701ac67dcafd0b4f6c6ef4f9907.zip"
+      },
+      "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/tell-owner/package.json",
       "verified": false
     }
   ]

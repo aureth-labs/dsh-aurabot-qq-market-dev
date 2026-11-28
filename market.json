@@ -1,70 +1,33 @@
 {
   "schema": 2,
-  "generatedAt": "2026-11-28T11:13:48.925Z",
+  "generatedAt": "2026-11-28T14:47:56.121Z",
   "entries": [
     {
-      "id": "shangxueink/playmusic",
-      "owner": "shangxueink",
-      "name": "playmusic",
-      "version": "1.0.1",
-      "displayName": "语音点歌",
-      "description": "点歌：搜哔哩哔哩/网易云的原唱，按匹配度挑最优一首，下载后抽成 mp3 当语音条发到当前会话。不需要任何 Cookie",
+      "id": "aureth-labs/ping",
+      "owner": "aureth-labs",
+      "name": "ping",
+      "version": "2.0.0-beta.2",
+      "displayName": "探活",
+      "description": "发送 ping，机器人回复 pong。",
       "panel": "./dist/panel.js",
-      "category": "social",
-      "capabilities": [
-        "filesystem",
-        "network",
-        "process"
-      ],
+      "category": "tool",
+      "capabilities": [],
       "kind": "plugin",
       "platforms": [
-        "qq"
+        "*"
       ],
       "requires": [],
-      "minPluginVersion": "1.2.0",
-      "api": 1,
+      "minPluginVersion": "2.0.0-beta.1",
+      "api": 2,
       "license": "MIT",
       "author": "shangxueink",
       "artifact": {
-        "url": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/releases/download/playmusic-v1.0.1/playmusic-v1.0.1.zip",
-        "sha256": "f8b92b88b13abd131fcf21b79d71012ffe4e2f66400d4d501840daa429e8c517",
-        "size": 20018,
-        "mirror": "artifacts/f8b92b88b13abd131fcf21b79d71012ffe4e2f66400d4d501840daa429e8c517.zip"
+        "url": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/releases/download/ping-v2.0.0-beta.1/ping-v2.0.0-beta.1.zip",
+        "sha256": "5ce8d3df921d4f611b14eb1a628ad9af92b49b9cb80bdaf29f05933f5564c74b",
+        "size": 3330,
+        "mirror": "artifacts/5ce8d3df921d4f611b14eb1a628ad9af92b49b9cb80bdaf29f05933f5564c74b.zip"
       },
-      "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/playmusic/package.json",
-      "verified": false
-    },
-    {
-      "id": "shangxueink/tell-owner",
-      "owner": "shangxueink",
-      "name": "tell-owner",
-      "version": "1.0.2",
-      "displayName": "转告主人反馈",
-      "description": "群里/私聊有人托话，记成工单送达主人；主人处理完，机器人自己找对工单回群引用原消息告诉本人",
-      "panel": "./dist/panel.js",
-      "category": "social",
-      "capabilities": [
-        "plugin-config",
-        "filesystem",
-        "network",
-        "plugin-internals"
-      ],
-      "kind": "plugin",
-      "platforms": [
-        "qq"
-      ],
-      "requires": [],
-      "minPluginVersion": "1.2.0",
-      "api": 1,
-      "license": "MIT",
-      "author": "shangxueink",
-      "artifact": {
-        "url": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/releases/download/tell-owner-v1.0.2/tell-owner-v1.0.2.zip",
-        "sha256": "6c89f181cd7092edc552441841551021dc17ffd13c61faa232cff63bdd0052aa",
-        "size": 19628,
-        "mirror": "artifacts/6c89f181cd7092edc552441841551021dc17ffd13c61faa232cff63bdd0052aa.zip"
-      },
-      "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/tell-owner/package.json",
+      "source": "https://github.com/aureth-labs/dsh-aurabot-qq-plugins-template/blob/main/modules/ping/package.json",
       "verified": false
     }
   ]

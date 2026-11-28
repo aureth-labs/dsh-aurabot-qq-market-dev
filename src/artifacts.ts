@@ -1,8 +1,10 @@
 import { createHash, randomUUID } from 'node:crypto'
 import { mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { text } from 'node:stream/consumers'
+import { fromBufferPromise } from 'yauzl'
 import type { BuildResult } from './build.js'
-import type { Artifact } from './types.js'
+import type { Artifact, MarketEntry } from './types.js'
 
 const MAX_BYTES = 25 * 1024 * 1024
 
@@ -27,6 +29,23 @@ async function readArtifact(asset: Artifact, localDir?: string) {
   return Buffer.concat(chunks)
 }
 
+export async function verifyManifest(bytes: Buffer, entry: MarketEntry) {
+  const zip = await fromBufferPromise(bytes)
+  let found = false
+  try {
+    for await (const file of zip.eachEntry()) {
+      if (file.fileName !== 'package.json') continue
+      if (found || file.uncompressedSize > 1024 * 1024) throw Error('发行包清单重复或过大')
+      found = true
+      const pkg = JSON.parse(await text(await zip.openReadStreamPromise(file)))
+      if (pkg.name !== entry.name || pkg.version !== entry.version || pkg.type !== 'module' || pkg.aurabot?.api !== entry.api) {
+        throw Error(`发行包清单 ${pkg.name}@${pkg.version} (API ${pkg.aurabot?.api}) 与索引 ${entry.name}@${entry.version} (API ${entry.api}) 不符`)
+      }
+    }
+    if (!found) throw Error('发行包缺少根目录 package.json')
+  } finally { zip.close() }
+}
+
 export async function mirrorArtifacts(result: BuildResult, output: string, localDir?: string) {
   const dir = join(output,'artifacts')
   await mkdir(dir,{recursive:true})
@@ -36,6 +55,7 @@ export async function mirrorArtifacts(result: BuildResult, output: string, local
       const asset = entry.artifact
       const bytes = await readArtifact(asset,localDir)
       if (bytes.length !== asset.size || createHash('sha256').update(bytes).digest('hex') !== asset.sha256) throw Error('发行包大小或 SHA-256 与清单不符')
+      await verifyManifest(bytes, entry)
       const filename = asset.sha256 + '.zip'
       const tmp = join(dir,'.' + randomUUID())
       try {

@@ -23,13 +23,9 @@ export interface BuildResult {
   renamed: { from: string; to: string }[]
 }
 
-/**
- * 收录的链接原样保留，不做改写。但 GitHub 的 blob 页面返回的是 HTML，
- * 请求时加 `?raw=1` 让它 302 到文件本身，拿到的就是 JSON。
- */
+/** 市场保留可点击的清单链接，构建读取原始 JSON。 */
 export function asRawView(url: string): string {
-  if (!/^https?:\/\/github\.com\/[^/]+\/[^/]+\/blob\//i.test(url)) return url
-  return url.includes('?') ? `${url}&raw=1` : `${url}?raw=1`
+  return url.replace(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\//i, 'https://raw.githubusercontent.com/$1/$2/')
 }
 
 async function readJson(source: string, timeoutMs: number): Promise<unknown> {

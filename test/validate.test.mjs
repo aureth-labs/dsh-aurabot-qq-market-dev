@@ -118,11 +118,19 @@ test('registry.jsonl 也认带引号的 JSON 字符串行', () => {
   assert.equal(sources.length, 1)
 })
 
-test('blob 链接请求时加 ?raw=1，链接本身不改', () => {
+test('blob 链接请求原始清单，链接本身不改', () => {
   assert.equal(
     asRawView('https://github.com/shangxueink/dsh-aurabot-qq-plugins-template/blob/main/modules/ping/package.json'),
-    'https://github.com/shangxueink/dsh-aurabot-qq-plugins-template/blob/main/modules/ping/package.json?raw=1',
+    'https://raw.githubusercontent.com/shangxueink/dsh-aurabot-qq-plugins-template/main/modules/ping/package.json',
   )
   assert.equal(asRawView('https://raw.githubusercontent.com/a/r/main/x.json'), 'https://raw.githubusercontent.com/a/r/main/x.json')
   assert.equal(asRawView('test/fixtures/good.json'), 'test/fixtures/good.json')
+})
+
+test('索引版本必须与发行包根清单一致，即使发行包哈希正确', async () => {
+  const { verifyManifest } = await import('../lib/artifacts.js')
+  const { readFile } = await import('node:fs/promises')
+  const bytes = await readFile(new URL('./fixtures/ping-beta1.zip', import.meta.url))
+  await verifyManifest(bytes, { name: 'ping', version: '2.0.0-beta.1', api: 2 })
+  await assert.rejects(verifyManifest(bytes, { name: 'ping', version: '2.0.0-beta.2', api: 2 }), /ping@2.0.0-beta.1.*ping@2.0.0-beta.2/)
 })

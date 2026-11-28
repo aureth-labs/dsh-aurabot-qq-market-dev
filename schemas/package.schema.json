@@ -35,8 +35,8 @@
         },
         "kind": { "enum": ["plugin", "adapter"] },
         "category": {
-          "enum": ["platform", "social", "creative", "desktop", "manage", "tool"],
-          "description": "单选。platform=逛平台 / social=聊天互动 / creative=创作 / desktop=桌面 / manage=管理 / tool=工具"
+          "enum": ["adapter", "platform", "social", "creative", "desktop", "manage", "tool"],
+          "description": "单选。adapter=适配器 / platform=逛平台 / social=聊天互动 / creative=创作 / desktop=桌面 / manage=管理 / tool=工具"
         },
         "capabilities": {
           "type": "array",

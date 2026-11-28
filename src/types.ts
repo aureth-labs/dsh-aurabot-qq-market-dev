@@ -2,7 +2,7 @@
  * 市场的数据形状。字段名一旦发布就不要改：作者仓库和宿主都依赖它。
  */
 
-export const CATEGORIES = ['platform', 'social', 'creative', 'desktop', 'manage', 'tool'] as const
+export const CATEGORIES = ['adapter', 'platform', 'social', 'creative', 'desktop', 'manage', 'tool'] as const
 export type Category = (typeof CATEGORIES)[number]
 
 export const CAPABILITIES = ['network', 'filesystem', 'process', 'dynamic-code', 'plugin-config', 'plugin-internals'] as const

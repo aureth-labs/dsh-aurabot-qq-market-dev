@@ -19,6 +19,7 @@ const escapeHtml = (text: string): string =>
     .replace(/'/g, '&#39;')
 
 const CATEGORY_LABEL: Record<string, string> = {
+  adapter: '适配器',
   platform: '平台',
   social: '社交',
   creative: '创作',

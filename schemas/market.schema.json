@@ -27,7 +27,7 @@
           "description": { "type": "string" },
           "panel": { "type": "string" },
           "kind": { "enum": ["plugin", "adapter"] },
-          "category": { "enum": ["platform", "social", "creative", "desktop", "manage", "tool"] },
+          "category": { "enum": ["adapter", "platform", "social", "creative", "desktop", "manage", "tool"] },
           "capabilities": { "type": "array", "items": { "type": "string" } },
           "platforms": { "type": "array", "items": { "type": "string" } },
           "requires": { "type": "array", "items": { "type": "string" } },

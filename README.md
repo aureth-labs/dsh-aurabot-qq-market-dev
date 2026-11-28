@@ -69,3 +69,9 @@ node lib/index.js build --registry ../dsh-aurabot-qq-mods/dist/registry.jsonl --
 ```
 
 构建器按清单核对 ZIP 的实际大小和 SHA-256，将文件写入索引旁的 artifacts/。宿主优先从同一镜像读取 ZIP，镜像不可达时可访问原始发行地址。预览清单使用本地工件。正式 CI 从作者的 Release 下载。
+
+## 本机开发市场
+
+在与本仓库同级的插件发布仓库运行 `npm run dry-run`，然后在本仓库运行 `npm run market:local`。构建读取收录表，只使用本机对应仓库生成的清单与 ZIP。每份包都会校验大小、SHA-256、包名、版本和 API，通过后才替换索引。
+
+在控制台的「模块市场 → 模块市场地址」选择「本机开发市场」并保存。框架和构建命令读取同一 `AURABOT_DATA_DIR`（默认位于 DSH 数据目录）。发布仓库位于其他位置时，可用 `npm run market:local -- <包含各仓库的目录>`。新安装的框架仍默认使用 GitHub 官方源。

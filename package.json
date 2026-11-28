@@ -12,6 +12,7 @@
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
     "market": "node lib/index.js build",
+    "market:local": "npm run build && node lib/local.js",
     "test": "npm run build && node --test \"test/*.test.mjs\""
   },
   "devDependencies": {

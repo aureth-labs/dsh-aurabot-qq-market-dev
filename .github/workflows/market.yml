@@ -41,7 +41,7 @@ jobs:
       - run: npm run check
       - run: npm test
       - name: 构建市场索引
-        run: node lib/index.js build --registry registry.jsonl --out dist/market.json --report dist/report.md
+        run: node lib/index.js build --strict --registry registry.jsonl --out dist/market.json --report dist/report.md
       - name: 跳过清单打到日志和 job summary
         if: always()
         run: |

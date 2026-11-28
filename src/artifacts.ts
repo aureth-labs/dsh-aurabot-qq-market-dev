@@ -46,14 +46,14 @@ export async function verifyManifest(bytes: Buffer, entry: MarketEntry) {
   } finally { zip.close() }
 }
 
-export async function mirrorArtifacts(result: BuildResult, output: string, localDir?: string) {
+export async function mirrorArtifacts(result: BuildResult, output: string, localDir?: string | ((entry: MarketEntry) => string)) {
   const dir = join(output,'artifacts')
   await mkdir(dir,{recursive:true})
   const entries = []
   for (const entry of result.index.entries) {
     try {
       const asset = entry.artifact
-      const bytes = await readArtifact(asset,localDir)
+      const bytes = await readArtifact(asset,typeof localDir === 'function' ? localDir(entry) : localDir)
       if (bytes.length !== asset.size || createHash('sha256').update(bytes).digest('hex') !== asset.sha256) throw Error('发行包大小或 SHA-256 与清单不符')
       await verifyManifest(bytes, entry)
       const filename = asset.sha256 + '.zip'

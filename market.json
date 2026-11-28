@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "generatedAt": "2026-11-28T18:40:21.337Z",
+  "generatedAt": "2026-11-28T19:13:52.723Z",
   "entries": [
     {
       "id": "aureth-labs/auto-reply",
@@ -277,6 +277,38 @@
       "verified": false
     },
     {
+      "id": "shangxueink/reverse-gif",
+      "owner": "shangxueink",
+      "name": "reverse-gif",
+      "version": "1.0.0",
+      "displayName": "GIF 图片倒放",
+      "description": "发送「倒放GIF」后上传动图，通过 FFmpeg 倒放并以图片回复。",
+      "panel": "./dist/panel.js",
+      "category": "tool",
+      "capabilities": [
+        "network",
+        "filesystem",
+        "process"
+      ],
+      "kind": "plugin",
+      "platforms": [
+        "*"
+      ],
+      "requires": [],
+      "minPluginVersion": "2.0.0-beta.20",
+      "api": 2,
+      "license": "MIT",
+      "author": "shangxueink",
+      "artifact": {
+        "url": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/releases/download/reverse-gif-v1.0.0/reverse-gif-v1.0.0.zip",
+        "sha256": "e23db77d2360a9df894d5cfb49cd0b853f059acd39de470bfebaa26c55e733cb",
+        "size": 5530,
+        "mirror": "artifacts/e23db77d2360a9df894d5cfb49cd0b853f059acd39de470bfebaa26c55e733cb.zip"
+      },
+      "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/reverse-gif/package.json",
+      "verified": false
+    },
+    {
       "id": "shangxueink/tell-owner",
       "owner": "shangxueink",
       "name": "tell-owner",
@@ -307,6 +339,38 @@
         "mirror": "artifacts/b0003ce4b62b0f4a1283073c2e58b0ff96305701ac67dcafd0b4f6c6ef4f9907.zip"
       },
       "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/tell-owner/package.json",
+      "verified": false
+    },
+    {
+      "id": "shangxueink/web-search",
+      "owner": "shangxueink",
+      "name": "web-search",
+      "version": "1.0.0",
+      "displayName": "网页搜索",
+      "description": "使用本机浏览器搜索网页，把结果标题、摘要和链接返回给 AI。",
+      "panel": "./dist/panel.js",
+      "category": "tool",
+      "capabilities": [
+        "network",
+        "process",
+        "plugin-config"
+      ],
+      "kind": "plugin",
+      "platforms": [
+        "*"
+      ],
+      "requires": [],
+      "minPluginVersion": "2.0.0-beta.20",
+      "api": 2,
+      "license": "MIT",
+      "author": "shangxueink",
+      "artifact": {
+        "url": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/releases/download/web-search-v1.0.0/web-search-v1.0.0.zip",
+        "sha256": "c15789ccbd49daf2c2b73aa28961798a93639066d4f4051b95799b6ba7a6605b",
+        "size": 4654,
+        "mirror": "artifacts/c15789ccbd49daf2c2b73aa28961798a93639066d4f4051b95799b6ba7a6605b.zip"
+      },
+      "source": "https://github.com/shangxueink/dsh-aurabot-qq-market-dev-plugins/blob/main/modules/web-search/package.json",
       "verified": false
     },
     {

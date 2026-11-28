@@ -9,7 +9,7 @@ import { parseRegistry } from './registry.js'
 const root = process.cwd()
 const workspaces = resolve(process.argv[2] || join(root, '..'))
 const data = process.env.AURABOT_DATA_DIR || join(process.env.DSH_HOME || join(homedir(), '.dsh'), 'plugins-data', 'aurabot')
-const output = join(data, 'market-local')
+const output = resolve(data) + '.market-local'
 const { sources, errors } = parseRegistry(await readFile(join(root, 'registry.jsonl'), 'utf8'))
 if (errors.length || !sources.length) throw Error(errors.join('；') || '收录表为空')
 const upstream = new Map<string, { url: string; dist: string }>()
